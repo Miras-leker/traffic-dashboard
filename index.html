@@ -1,0 +1,885 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Трафик и продажи</title>
+<meta name="description" content="Кабинет трафика: расход, лиды, договоры, креативы и менеджеры по дням из Google Таблиц.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<style>
+  /* Layout: sidebar + main on a cool off-white ground; cards white; blue accent, mint for "good" */
+  :root {
+    --color-bg: #F3F5FA; --color-panel: #FFFFFF; --color-fg: #0F172A; --color-fg-muted: #64748B; --color-border-line: #E4E8F1;
+    --color-ok: #15803D; --color-warn: #B45309; --color-bad: #DC2626;
+    --cds-radius: 12px; --cds-pad-xs: 4px; --cds-pad-sm: 8px; --cds-pad-md: 12px; --cds-pad-lg: 18px; --cds-pad-xl: 24px;
+    --cds-gap-xs: 4px; --cds-gap-sm: 8px; --cds-gap-md: 16px; --cds-gap-lg: 24px; --cds-gap-xl: 32px;
+    --cds-font-size-caption: 12px; --cds-font-size-body: 14px; --cds-font-size-heading: 16px; --cds-font-size-title: 22px; --cds-font-weight-medium: 600;
+    --cds-chart-grid: #EDF0F6; --cds-chart-axis: #CBD5E1; --cds-chart-reference: #94A3B8; --cds-chart-muted: #CBD5E1;
+    --cds-surface-popover: #FFFFFF; --cds-border: #E4E8F1; --cds-shadow-popover: 0 8px 24px rgba(15, 23, 42, .12); --cds-text-secondary: #64748B;
+    --cds-dur-slow: .4s; --cds-ease-out: cubic-bezier(.2, .8, .2, 1);
+    --font-anthropic-sans: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif; --font-anthropic-serif: 'Manrope', system-ui, sans-serif;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+    --color-bg: #0B1220; --color-panel: #131B2E; --color-fg: #E6EAF2; --color-fg-muted: #94A3B8; --color-border-line: #243049;
+    --color-ok: #4ADE80; --color-warn: #FBBF24; --color-bad: #F87171;
+    --cds-chart-grid: #1E293B; --cds-chart-axis: #334155; --cds-chart-reference: #64748B; --cds-chart-muted: #334155;
+    --cds-surface-popover: #1B2540; --cds-border: #2B3650; --cds-text-secondary: #94A3B8; color-scheme: dark;
+  } }
+  :root[data-theme="dark"] {
+    --color-bg: #0B1220; --color-panel: #131B2E; --color-fg: #E6EAF2; --color-fg-muted: #94A3B8; --color-border-line: #243049;
+    --color-ok: #4ADE80; --color-warn: #FBBF24; --color-bad: #F87171;
+    --cds-chart-grid: #1E293B; --cds-chart-axis: #334155; --cds-chart-reference: #64748B; --cds-chart-muted: #334155;
+    --cds-surface-popover: #1B2540; --cds-border: #2B3650; --cds-text-secondary: #94A3B8; color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--color-bg); color: var(--color-fg); font-family: var(--font-anthropic-sans); font-size: var(--cds-font-size-body); line-height: 1.45; padding-inline: clamp(12px, 2.5vw, 32px); padding-block: clamp(12px, 2.5vw, 28px); -webkit-font-smoothing: antialiased; }
+  [hidden] { display: none !important; }
+  .dash-skeleton { position: relative; color: transparent !important; }
+  .dash-skeleton::after { content: ""; position: absolute; left: 0; top: .15em; height: .9em; width: 4.5em; max-width: 100%; border-radius: 6px; background: color-mix(in srgb, var(--color-fg) 8%, transparent); animation: pulse 1.2s ease-in-out infinite; }
+  .lp-chart.dash-skeleton::after { top: 0; height: 100%; width: 100%; }
+  @keyframes pulse { 50% { opacity: .45; } }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+  .lp-wrap { max-width: 1440px; margin-inline: auto; }
+</style>
+<style>
+    .lp { --lp-accent: #2F6BFF; --lp-mint: #2FBF9A; --lp-tint: color-mix(in srgb, var(--lp-accent) 9%, var(--color-panel)); --lp-tint2: color-mix(in srgb, var(--lp-mint) 14%, var(--color-panel)); --lp-soft: color-mix(in srgb, var(--color-fg) 4%, var(--color-panel)); --lp-radius: 16px;
+    font-family: var(--font-anthropic-sans); font-variant-numeric: tabular-nums; display: grid; grid-template-columns: 13.5rem minmax(0, 1fr); gap: var(--cds-gap-md); align-items: start; }
+  .lp *, .lp *::before, .lp *::after { box-sizing: border-box; }
+  .lp h1 { font-size: calc(var(--cds-font-size-title) * 1.5); font-weight: 600; letter-spacing: -.02em; margin: 0; line-height: 1.1; text-wrap: balance; background: linear-gradient(90deg, var(--color-fg) 0%, var(--color-fg) 55%, var(--lp-accent) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; width: fit-content; }
+  .lp h2 { font-size: var(--cds-font-size-title); font-weight: 600; letter-spacing: -.01em; margin: 0; }
+  .lp h3 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 0; }
+  .lp p { margin: 0; }
+  .lp .lp-eyebrow { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); text-transform: uppercase; letter-spacing: .08em; font-weight: var(--cds-font-weight-medium); }
+  .lp .lp-cap { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .lp .lp-muted { color: var(--color-fg-muted); }
+  .lp b { font-weight: 600; }
+  .lp .lp-aside { position: sticky; top: var(--cds-gap-md); background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--lp-radius); padding: var(--cds-pad-md); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--cds-gap-lg); align-content: start; min-width: 0; overflow: hidden; }
+  .lp .lp-aside > * { min-width: 0; }
+  .lp .lp-brand { display: flex; align-items: center; gap: var(--cds-gap-sm); padding: var(--cds-pad-xs); min-width: 0; }
+  .lp .lp-logo { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #5B8CFF 0%, var(--lp-accent) 55%, #1E40AF 100%); box-shadow: 0 6px 14px color-mix(in srgb, var(--lp-accent) 35%, transparent); display: grid; place-items: center; color: #fff; font-weight: 700; font-size: 15px; flex: none; }
+  .lp .lp-brand div { min-width: 0; }
+  .lp .lp-brand .lp-cap { line-height: 1.25; }
+  .lp nav { display: grid; gap: 4px; }
+  .lp nav button { font: inherit; font-size: var(--cds-font-size-body); text-align: left; color: var(--color-fg); background: transparent; border: 0; border-radius: 10px; padding: 10px 12px; cursor: pointer; display: flex; align-items: center; gap: 10px; }
+  .lp nav button:hover { background: var(--lp-soft); }
+  .lp nav button[aria-current="page"] { background: linear-gradient(90deg, var(--lp-tint), color-mix(in srgb, var(--lp-accent) 3%, var(--color-panel))); color: var(--lp-accent); font-weight: var(--cds-font-weight-medium); box-shadow: inset 3px 0 0 var(--lp-accent); }
+  .lp nav button:focus-visible, .lp .lp-seg button:focus-visible { outline: 2px solid var(--lp-accent); outline-offset: 2px; }
+  .lp nav svg { width: 18px; height: 18px; flex: none; }
+  .lp .lp-aside-foot { background: linear-gradient(135deg, var(--lp-tint2), color-mix(in srgb, var(--lp-accent) 10%, var(--color-panel))); border-radius: 12px; padding: var(--cds-pad-md); display: grid; gap: 2px; }
+  .lp .lp-aside-foot b { font-size: var(--cds-font-size-heading); }
+  .lp main { display: grid; gap: var(--cds-gap-md); min-width: 0; }
+  .lp .lp-head { display: flex; flex-wrap: wrap; gap: var(--cds-gap-md); justify-content: space-between; align-items: flex-end; padding: var(--cds-pad-sm) 0; }
+  .lp .lp-head > div { min-width: 0; }
+  .lp .lp-head .lp-sub { margin-top: 6px; max-width: 64ch; }
+  .lp .lp-seg { display: inline-flex; background: var(--lp-soft); border-radius: 999px; padding: 3px; }
+  .lp .lp-seg button { font: inherit; font-size: var(--cds-font-size-body); color: var(--color-fg-muted); background: transparent; border: 0; border-radius: 999px; padding: 6px 14px; cursor: pointer; white-space: nowrap; }
+  .lp .lp-seg button[aria-pressed="true"] { background: linear-gradient(135deg, #4F83FF, var(--lp-accent)); color: #fff; font-weight: var(--cds-font-weight-medium); box-shadow: 0 4px 10px color-mix(in srgb, var(--lp-accent) 30%, transparent); }
+  .lp .lp-card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--lp-radius); padding: var(--cds-pad-lg); min-width: 0; display: grid; gap: var(--cds-gap-sm); align-content: start; }
+  .lp #today-card { background: linear-gradient(160deg, color-mix(in srgb, var(--lp-accent) 9%, var(--color-panel)) 0%, var(--color-panel) 55%); }
+  .lp .lp-card-head { display: flex; justify-content: space-between; gap: var(--cds-gap-sm); flex-wrap: wrap; align-items: baseline; }
+  .lp .lp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); gap: var(--cds-gap-md); }
+  .lp .lp-grid-31 { display: grid; grid-template-columns: minmax(0, 2fr) minmax(min(100%, 16rem), 1fr); gap: var(--cds-gap-md); }
+  .lp .lp-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr)); gap: var(--cds-gap-md); }
+  .lp .lp-tile { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--lp-radius); padding: var(--cds-pad-md) var(--cds-pad-lg); display: grid; gap: 4px; min-width: 0; position: relative; overflow: hidden; }
+  .lp .lp-tile::after { content: ""; position: absolute; right: -30px; top: -30px; width: 96px; height: 96px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, color-mix(in srgb, var(--lp-accent) 22%, var(--color-panel)), color-mix(in srgb, var(--lp-accent) 4%, var(--color-panel)) 70%); opacity: .9; }
+  .lp .lp-tile { background: linear-gradient(180deg, var(--color-panel), color-mix(in srgb, var(--lp-accent) 2.5%, var(--color-panel))); }
+  .lp .lp-tile > * { position: relative; }
+  .lp .lp-tile-label { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .lp .lp-tile-value { font-size: calc(var(--cds-font-size-title) * 1.45); font-weight: 600; letter-spacing: -.02em; line-height: 1.1; min-height: 1.1em; }
+  .lp .lp-tile-sub { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); display: flex; gap: 10px; flex-wrap: wrap; }
+  .lp .lp-tile-sub b { color: var(--color-fg); font-weight: var(--cds-font-weight-medium); }
+  .lp .lp-delta { font-size: var(--cds-font-size-caption); }
+  .lp .lp-delta[data-good="1"] { color: var(--color-ok); }
+  .lp .lp-delta[data-good="0"] { color: var(--color-bad); }
+  .lp .lp-days { display: flex; gap: var(--cds-gap-sm); overflow-x: auto; padding-bottom: 6px; scroll-snap-type: x proximity; }
+  .lp .lp-day { flex: 0 0 8.5rem; scroll-snap-align: start; background: var(--lp-soft); border-radius: 12px; padding: var(--cds-pad-sm) var(--cds-pad-md); display: grid; gap: 6px; }
+  .lp .lp-day[data-today="1"] { outline: 2px solid var(--lp-accent); outline-offset: -2px; background: var(--lp-tint); }
+  .lp .lp-day .lp-day-date { font-weight: var(--cds-font-weight-medium); font-size: var(--cds-font-size-body); display: flex; justify-content: space-between; }
+  .lp .lp-day .lp-day-date span:last-child { color: var(--color-fg-muted); font-weight: 400; }
+  .lp .lp-day .lp-m { display: grid; gap: 2px; }
+  .lp .lp-day .lp-m .lp-cap { font-size: 11px; }
+  .lp .lp-day .lp-m b { font-size: var(--cds-font-size-body); }
+  .lp .lp-mini { height: 6px; border-radius: 3px; background: color-mix(in srgb, var(--color-fg) 8%, transparent); overflow: hidden; }
+  .lp .lp-mini i { display: block; height: 100%; width: 0; border-radius: 3px; background: linear-gradient(90deg, #7AA2FF, var(--lp-accent)); }
+  .lp .lp-mini.lp-mint i { background: var(--lp-mint); }
+  .lp .lp-donut { display: grid; grid-template-columns: 8.5rem 1fr; gap: var(--cds-gap-md); align-items: center; }
+  .lp .lp-donut svg { width: 100%; height: auto; display: block; }
+  .lp .lp-donut-num { font-size: calc(var(--cds-font-size-title) * 1.1); font-weight: 600; letter-spacing: -.02em; }
+  .lp .lp-goal-rows { display: grid; gap: var(--cds-gap-sm); }
+  .lp .lp-goal { display: grid; gap: 4px; }
+  .lp .lp-goal-top { display: flex; justify-content: space-between; gap: 8px; font-size: var(--cds-font-size-body); }
+  .lp .lp-bar { height: 8px; border-radius: 4px; background: color-mix(in srgb, var(--color-fg) 8%, transparent); overflow: hidden; }
+  .lp .lp-bar i { display: block; height: 100%; width: 0; border-radius: 4px; background: linear-gradient(90deg, #7AA2FF, var(--lp-accent)); transition: width var(--cds-dur-slow) var(--cds-ease-out); }
+  .lp .lp-bar[data-met="1"] i { background: linear-gradient(90deg, #7EE0C4, var(--lp-mint)); }
+  .lp .lp-bar { position: relative; }
+  .lp .lp-bar em { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--color-fg); left: var(--p, 0); display: none; }
+  .lp .lp-bar[data-pace="1"] em { display: block; }
+  .lp .lp-fill { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr)); gap: var(--cds-gap-sm); }
+  .lp .lp-fill-item { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 10px; background: var(--lp-soft); font-size: var(--cds-font-size-body); }
+  .lp .lp-fill-item[data-state="ok"] { background: var(--lp-tint2); }
+  .lp .lp-fill-item[data-state="bad"] { background: color-mix(in srgb, var(--color-bad) 10%, var(--color-panel)); }
+  .lp .lp-fill-item .lp-cap { text-align: right; }
+  .lp .lp-fill-item .lp-cap b { font-weight: 600; }
+  .lp .lp-creos { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15.5rem), 1fr)); gap: var(--cds-gap-md); }
+  .lp .lp-creo { border: 1px solid var(--color-border-line); border-radius: 12px; padding: var(--cds-pad-md); display: grid; gap: 6px; align-content: start; min-width: 0; background: var(--color-panel); }
+  .lp .lp-creo-top { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; }
+  .lp .lp-creo-name { font-weight: 600; font-size: var(--cds-font-size-body); overflow-wrap: anywhere; }
+  .lp .lp-creo-msg { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .lp .lp-creo-foot { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-top: 4px; }
+  .lp .lp-creo-sales { font-size: calc(var(--cds-font-size-title) * 1.1); font-weight: 600; letter-spacing: -.02em; }
+  .lp .lp-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; padding: 2px 8px; border-radius: 999px; background: var(--lp-soft); color: var(--color-fg-muted); white-space: nowrap; }
+  .lp .lp-chip[data-on="1"] { background: var(--lp-tint2); color: var(--lp-mint); }
+  .lp .lp-chip[data-on="1"]::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--lp-mint); }
+  .lp .lp-chip[data-src="TikTok"] { background: color-mix(in srgb, var(--color-fg) 90%, transparent); color: var(--color-bg); }
+  .lp .lp-chip[data-src="Facebook"] { background: var(--lp-tint); color: var(--lp-accent); }
+  .lp .lp-chart { position: relative; min-height: 240px; }
+  .lp .lp-chart svg { display: block; width: 100%; height: auto; }
+  .lp .lp-tip { position: absolute; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); border-radius: var(--cds-radius); box-shadow: var(--cds-shadow-popover); padding: var(--cds-pad-xs) var(--cds-pad-sm); font-size: var(--cds-font-size-caption); pointer-events: none; white-space: nowrap; display: none; z-index: 2; }
+  .lp .lp-tip .lp-tip-h { color: var(--cds-text-secondary); margin-bottom: 2px; }
+  .lp .lp-sw { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+  .lp .lp-legend { display: flex; gap: var(--cds-gap-md); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); flex-wrap: wrap; }
+  .lp .lp-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+  .lp .lp-funnel { display: grid; gap: 10px; }
+  .lp .lp-step { display: grid; grid-template-columns: 9rem 1fr 4.5rem; gap: 10px; align-items: center; font-size: var(--cds-font-size-body); }
+  .lp .lp-step .lp-fbar { height: 22px; border-radius: 6px; background: var(--lp-tint); position: relative; overflow: hidden; }
+  .lp .lp-step .lp-fbar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #7AA2FF, var(--lp-accent)); border-radius: 6px; transition: width var(--cds-dur-slow) var(--cds-ease-out); }
+  .lp .lp-step .lp-fbar[data-worst="1"] i { background: var(--color-bad); }
+  .lp .lp-step .lp-loss { text-align: right; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .lp .lp-tablebox { overflow: auto; max-height: 32rem; }
+  .lp table { width: 100%; border-collapse: collapse; font-size: var(--cds-font-size-body); }
+  .lp th, .lp td { text-align: right; padding: 8px 10px; border-bottom: 1px solid var(--color-border-line); white-space: nowrap; vertical-align: top; }
+  .lp th.lp-l, .lp td.lp-l { text-align: left; }
+  .lp td.lp-wrap { white-space: normal; min-width: 14rem; max-width: 26rem; }
+  .lp th { position: sticky; top: 0; background: var(--color-panel); font-weight: var(--cds-font-weight-medium); color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); cursor: pointer; user-select: none; z-index: 1; }
+  .lp th[aria-sort="descending"]::after { content: " ↓"; }
+  .lp th[aria-sort="ascending"]::after { content: " ↑"; }
+  .lp tr:last-child td { border-bottom: 0; }
+  .lp td.lp-best { color: var(--lp-mint); font-weight: 600; }
+  .lp .lp-cell-bar { display: inline-block; height: 8px; width: var(--w, 0); max-width: 5rem; background: var(--lp-accent); border-radius: 4px; margin-right: 6px; vertical-align: middle; }
+  .lp .lp-empty { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); white-space: normal; }
+  .lp .lp-fail { display: flex; align-items: center; justify-content: center; gap: 6px; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); min-height: 240px; }
+  .lp .lp-fail::before { content: ""; width: .375rem; height: .375rem; border-radius: 50%; background: var(--color-bad); }
+  .lp .lp-note { background: var(--lp-soft); border-radius: 10px; padding: var(--cds-pad-sm) var(--cds-pad-md); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .lp [data-dash-source-state=empty] { color: transparent; }
+  .lp [data-dash-source-state=refreshing] { opacity: .5; transition: opacity var(--cds-dur-slow); }
+  .lp section[hidden] { display: none; }
+  @media (max-width: 900px) {
+    .lp { grid-template-columns: 1fr; }
+    .lp .lp-aside { position: static; grid-template-columns: 1fr; gap: var(--cds-gap-sm); padding: var(--cds-pad-sm); }
+    .lp nav { grid-auto-flow: column; grid-auto-columns: max-content; overflow-x: auto; }
+    .lp .lp-aside-foot { display: none; }
+    .lp .lp-grid-31 { grid-template-columns: 1fr; }
+    .lp .lp-sec { display: none; }
+    .lp .lp-step { grid-template-columns: 6.5rem 1fr 4rem; }
+  }
+</style>
+
+<div class="lp-wrap"><div class="lp">
+  <aside class="lp-aside">
+    <div class="lp-brand"><div class="lp-logo">ВП</div><div><div style="font-weight:600">Кабинет трафика</div><div class="lp-cap">Восстановление платёжеспособности</div></div></div>
+    <nav aria-label="Разделы">
+      <button type="button" data-page="overview" aria-current="page"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="6" height="6" rx="1.5"/><rect x="11" y="3" width="6" height="6" rx="1.5"/><rect x="3" y="11" width="6" height="6" rx="1.5"/><rect x="11" y="11" width="6" height="6" rx="1.5"/></svg>Обзор</button>
+      <button type="button" data-page="dynamics"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 15l4-5 3 3 4-6 3 3"/></svg>Динамика</button>
+      <button type="button" data-page="creatives"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="14" height="12" rx="2"/><path d="M8 8l4 2-4 2z" fill="currentColor" stroke="none"/></svg>Креативы</button>
+      <button type="button" data-page="managers"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="2.5"/><circle cx="14" cy="8" r="2"/><path d="M2.5 16c.5-3 2.5-4.5 4.5-4.5s4 1.5 4.5 4.5M11.5 15c.3-2 1.5-3.2 2.5-3.2s2.3 1 2.7 3.2"/></svg>Менеджеры</button>
+    </nav>
+    <div class="lp-aside-foot" data-source="creatives_live"><div class="lp-cap">В эфире сейчас</div><b data-field="live" data-row="0">—</b><div class="lp-cap">креативов из <span data-field="total" data-row="0">—</span></div></div>
+  </aside>
+
+  <main>
+    <header class="lp-head" id="top">
+      <div>
+        <div class="lp-eyebrow">Кабинет трафика</div>
+        <h1 id="greeting">Добрый день</h1>
+        <p class="lp-sub lp-muted" id="takeaway" data-source="by_period creatives">—</p>
+      </div>
+      <div style="display:grid; gap:6px; justify-items:end"><div class="lp-seg" role="group" aria-label="Период">
+        <button type="button" data-period="day" aria-pressed="false">Сегодня</button>
+        <button type="button" data-period="week" aria-pressed="false">7 дней</button>
+        <button type="button" data-period="month" aria-pressed="true" id="btn-month">Месяц</button>
+      </div><div class="lp-cap" id="status">Загружаю данные…</div></div>
+    </header>
+
+    <section id="overview">
+      <div style="display:grid; gap: var(--cds-gap-md)">
+        <div class="lp-tiles lp-follow">
+          <div class="lp-tile" id="kpi-spend"><div class="lp-tile-label">Потрачено, $</div><div class="lp-tile-value dash-skeleton" data-source="by_period" data-field="spend" data-where="period=month">—</div><div class="lp-tile-sub"><span>Meta <b data-source="by_period" data-field="fb_spend" data-where="period=month">—</b></span><span>TikTok <b data-source="by_period" data-field="tt_spend" data-where="period=month">—</b></span><span class="lp-delta" data-delta="d_spend" data-good-up="0"></span></div></div>
+          <div class="lp-tile" id="kpi-leads"><div class="lp-tile-label">Лиды из кабинетов</div><div class="lp-tile-value dash-skeleton" data-source="by_period" data-field="leads" data-where="period=month">—</div><div class="lp-tile-sub"><span>Meta <b data-source="by_period" data-field="fb_leads" data-where="period=month">—</b></span><span>TikTok <b data-source="by_period" data-field="tt_leads" data-where="period=month">—</b></span><span class="lp-delta" data-delta="d_leads" data-good-up="1"></span></div></div>
+          <div class="lp-tile" id="kpi-contracts"><div class="lp-tile-label">Договоров подписано</div><div class="lp-tile-value dash-skeleton" data-source="by_period" data-field="contracts" data-where="period=month">—</div><div class="lp-tile-sub"><span>по темпу <b data-source="by_period" data-field="goal_contracts" data-where="period=month">—</b></span><span class="lp-delta" data-delta="d_contracts" data-good-up="1"></span></div></div>
+          <div class="lp-tile" id="kpi-cpl"><div class="lp-tile-label">Цена заявки, $</div><div class="lp-tile-value dash-skeleton" data-source="by_period" data-field="cpl" data-where="period=month">—</div><div class="lp-tile-sub"><span>Meta <b data-source="by_period" data-field="fb_cpl" data-where="period=month">—</b></span><span>TikTok <b data-source="by_period" data-field="tt_cpl" data-where="period=month">—</b></span></div></div>
+          <div class="lp-tile" id="kpi-cpc"><div class="lp-tile-label">Цена договора, $</div><div class="lp-tile-value dash-skeleton" data-source="by_period" data-field="cpc" data-where="period=month">—</div><div class="lp-tile-sub"><span>расход ÷ договоры</span></div></div>
+          <div class="lp-tile" id="kpi-cr"><div class="lp-tile-label">Лид → договор, %</div><div class="lp-tile-value dash-skeleton" data-source="by_period" data-field="cr" data-where="period=month">—</div><div class="lp-tile-sub"><span>из CRM-лидов <b data-source="by_period" data-field="cr_crm" data-where="period=month">—</b>%</span></div></div>
+        </div>
+
+        <div class="lp-grid-31">
+          <div class="lp-card" id="days-card">
+            <div class="lp-card-head"><div><div class="lp-eyebrow">Динамика</div><h2>Как работает реклама</h2></div><span class="lp-cap" id="days-note">—</span></div>
+            <div class="lp-days" id="days" data-source="daily"></div>
+          </div>
+          <div class="lp-card" id="today-card">
+            <div class="lp-card-head"><div><div class="lp-eyebrow">План на день</div><h2>Сегодня в работе</h2></div><span class="lp-cap" data-source="by_period" data-field="label" data-where="period=day">—</span></div>
+            <div class="lp-donut" data-source="by_period">
+              <svg viewBox="0 0 120 120" id="donut"></svg>
+              <div><div class="lp-cap">Потрачено</div><div class="lp-donut-num"><span data-source="by_period" data-field="spend" data-where="period=day">—</span> <span class="lp-muted" style="font-size: var(--cds-font-size-body); font-weight: 400">$</span></div><div class="lp-cap">из <span data-source="by_period" data-field="goal_spend" data-where="period=day">—</span> $ дневного бюджета</div></div>
+            </div>
+            <div class="lp-goal-rows">
+              <div class="lp-goal" data-goal="leads"><div class="lp-goal-top"><span>Лиды</span><span><b data-source="by_period" data-field="leads" data-where="period=day">—</b> <span class="lp-muted">из <span data-source="by_period" data-field="goal_leads" data-where="period=day">—</span></span></span></div><div class="lp-bar"><i></i></div></div>
+              <div class="lp-goal" data-goal="contracts"><div class="lp-goal-top"><span>Договоры</span><span><b data-source="by_period" data-field="contracts" data-where="period=day">—</b> <span class="lp-muted">из <span data-source="by_period" data-field="goal_contracts" data-where="period=day">—</span></span></span></div><div class="lp-bar"><i></i></div></div>
+            </div>
+            <p class="lp-cap" id="fill-line" data-source="managers">—</p>
+          </div>
+        </div>
+
+        <div class="lp-card" id="live-card">
+          <div class="lp-card-head"><div><div class="lp-eyebrow">Креативы</div><h2>Сейчас в эфире</h2></div><span class="lp-cap">Продажи по креативу берутся из листа «Креосы», колонка «продажи»</span></div>
+          <div class="lp-creos" id="live-creos" data-source="creatives"></div>
+        </div>
+
+        <div class="lp-card" id="pace-card">
+          <div class="lp-card-head"><div><div class="lp-eyebrow">Цель месяца</div><h2>Темп за <span data-source="by_period" data-field="label" data-where="period=month">—</span></h2></div><span class="lp-cap">Цели октября: 200 договоров, 7 750 лидов, $3 650 бюджета. Чёрная метка — где надо быть по темпу на сегодня</span></div>
+          <div class="lp-grid">
+            <div class="lp-goal lp-pace" data-goal="contracts"><div class="lp-goal-top"><span>Договоры</span><span><b data-source="by_period" data-field="contracts" data-where="period=month">—</b> <span class="lp-muted">из <span data-source="by_period" data-field="goal_month_contracts" data-where="period=month">—</span></span></span></div><div class="lp-bar" data-pace="1"><i></i><em></em></div><div class="lp-cap">по темпу должно быть <span data-source="by_period" data-field="goal_contracts" data-where="period=month">—</span>, выполнено <span data-source="by_period" data-field="pct_contracts" data-where="period=month">—</span>% месяца</div></div>
+            <div class="lp-goal lp-pace" data-goal="leads"><div class="lp-goal-top"><span>Лиды</span><span><b data-source="by_period" data-field="leads" data-where="period=month">—</b> <span class="lp-muted">из <span data-source="by_period" data-field="goal_month_leads" data-where="period=month">—</span></span></span></div><div class="lp-bar" data-pace="1"><i></i><em></em></div><div class="lp-cap">по темпу должно быть <span data-source="by_period" data-field="goal_leads" data-where="period=month">—</span>, выполнено <span data-source="by_period" data-field="pct_leads" data-where="period=month">—</span>% месяца</div></div>
+            <div class="lp-goal lp-pace" data-goal="spend"><div class="lp-goal-top"><span>Бюджет, $</span><span><b data-source="by_period" data-field="spend" data-where="period=month">—</b> <span class="lp-muted">из <span data-source="by_period" data-field="goal_month_spend" data-where="period=month">—</span></span></span></div><div class="lp-bar" data-pace="1"><i></i><em></em></div><div class="lp-cap">по темпу должно быть <span data-source="by_period" data-field="goal_spend" data-where="period=month">—</span>, выполнено <span data-source="by_period" data-field="pct_spend" data-where="period=month">—</span>% месяца</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="dynamics" hidden>
+      <div style="display:grid; gap: var(--cds-gap-md)">
+        <div class="lp-grid">
+          <div class="lp-card" id="chart-leads-card">
+            <div class="lp-card-head"><h3>Лиды по дням</h3><span class="lp-legend"><span><i class="lp-sw-fb"></i>Meta</span><span><i class="lp-sw-tt"></i>TikTok</span><span>- - дневная цель</span></span></div>
+            <div class="lp-chart dash-skeleton" id="chart-leads" data-source="daily"><div class="lp-tip"></div></div>
+          </div>
+          <div class="lp-card" id="chart-spend-card">
+            <div class="lp-card-head"><h3>Расход по дням, $</h3><span class="lp-legend"><span><i class="lp-sw-fb"></i>Meta</span><span><i class="lp-sw-tt"></i>TikTok</span><span>- - дневной бюджет</span></span></div>
+            <div class="lp-chart dash-skeleton" id="chart-spend" data-source="daily"><div class="lp-tip"></div></div>
+          </div>
+        </div>
+        <div class="lp-grid">
+          <div class="lp-card" id="funnel-card">
+            <div class="lp-card-head"><h3>Воронка</h3><span class="lp-cap" id="funnel-note">—</span></div>
+            <p class="lp-cap">Лиды из кабинетов → что дошло до менеджеров (лист «Динамика») → договоры. Справа потеря к предыдущему шагу, самая большая выделена.</p>
+            <div class="lp-funnel" id="funnel" data-source="by_period"></div>
+          </div>
+          <div class="lp-card" id="chart-contracts-card">
+            <div class="lp-card-head"><h3>Договоры по дням</h3><span class="lp-legend"><span><i class="lp-sw-mint"></i>Договоры</span><span>- - дневная цель</span></span></div>
+            <div class="lp-chart dash-skeleton" id="chart-contracts" data-source="daily"><div class="lp-tip"></div></div>
+          </div>
+        </div>
+        <div class="lp-card" id="daily-table-card">
+          <div class="lp-card-head"><h3>Таблица по дням</h3><span class="lp-cap" id="daily-note">—</span></div>
+          <div class="lp-tablebox">
+            <table id="daily-table" data-source="daily" data-row-key="date">
+              <thead><tr>
+                <th data-field="date" class="lp-l">Дата</th>
+                <th data-field="fb_spend">Meta $</th><th data-field="tt_spend">TikTok $</th><th data-field="spend">Всего $</th>
+                <th data-field="fb_leads" class="lp-sec">Meta лиды</th><th data-field="tt_leads" class="lp-sec">TikTok лиды</th><th data-field="leads">Лиды</th>
+                <th data-field="cpl">CPL $</th><th data-field="crm_leads" class="lp-sec">В CRM</th><th data-field="qual" class="lp-sec">Квал</th><th data-field="consults" class="lp-sec">Конс.</th><th data-field="contracts">Договоры</th>
+              </tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="creatives" hidden>
+      <div class="lp-card" id="creatives-card">
+        <div class="lp-card-head"><div><div class="lp-eyebrow">Креативы и UTM-сообщения</div><h2>Какой креатив продаёт</h2></div><span class="lp-cap">Лист «Креосы» и «Креосы (ТикТок)» таблицы «Аналитика маркетинг»</span></div>
+        <p class="lp-cap">Шаблонное сообщение в WhatsApp работает как UTM-метка: по нему менеджер понимает, с какого макета пришёл клиент. Продажи сюда проставляются вручную. Нажми на заголовок, чтобы отсортировать.</p>
+        <div class="lp-tablebox">
+          <table id="creatives-table" data-source="creatives" data-row-key="n">
+            <thead><tr>
+              <th data-field="source" data-sort="source" class="lp-l">Канал</th>
+              <th data-field="creative" data-sort="creative" class="lp-l">Креатив</th>
+              <th data-field="campaign" data-sort="campaign" class="lp-l lp-sec">Кампания / adset</th>
+              <th data-field="message" data-sort="message" class="lp-l lp-sec">Сообщение (UTM)</th>
+              <th data-field="running" data-sort="running">Статус</th>
+              <th data-field="budget" data-sort="budget">Бюджет $</th>
+              <th data-field="sales" data-sort="sales" aria-sort="descending">Продажи</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="managers" hidden>
+      <div style="display:grid; gap: var(--cds-gap-md)">
+        <div class="lp-card" id="fill-card">
+          <div class="lp-card-head"><div><div class="lp-eyebrow">Дисциплина</div><h2>Кто заполнил таблицу</h2></div><span class="lp-cap" data-source="by_period" data-field="label" data-where="period=day">—</span></div>
+          <p class="lp-cap">Листы менеджеров в «РНП продажи» читаются напрямую. День считается заполненным, если в строке есть цифры или комментарий («Выходной»). Пропуски считаются с начала месяца.</p>
+          <div class="lp-fill" id="fill" data-source="managers"></div>
+        </div>
+        <div class="lp-card" id="managers-card">
+          <div class="lp-card-head"><div><div class="lp-eyebrow">Отдел продаж</div><h2>Менеджеры</h2></div><span class="lp-cap" id="managers-note">—</span></div>
+          <div class="lp-tablebox">
+            <table id="managers-table" data-source="managers" data-row-key="period,manager">
+              <thead><tr>
+                <th data-field="manager" class="lp-l">Менеджер</th>
+                <th data-field="leads">Лидов</th>
+                <th data-field="taken" class="lp-sec">Взято</th>
+                <th data-field="qual" class="lp-sec">Квал</th>
+                <th data-field="consults">Консультаций</th>
+                <th data-field="contracts">Договоров</th>
+                <th data-field="cr_lead">Лид → договор %</th>
+                <th data-field="cr_consult" class="lp-sec">Конс. → договор %</th>
+                <th data-field="missing_days">Пропусков</th>
+              </tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+</div>
+<script>
+// ---- Runtime: reads public Google Sheets as CSV and feeds the page ----
+const SOURCES = {
+  ads_daily:    {id: '1fw7lUjWEayL57b3TWPCnLMzlZiS3xmCTRqEHFgGfXq0', sheet: 'Окт', range: 'A1:J40'},
+  crm_daily:    {id: '1TX3Ckjm8ZxZAPNsuXZ4pYaZfBUCn3ihkiJV3-9Rl2VY', sheet: 'Динамика', range: 'A3:J40'},
+  creatives_fb: {id: '1W0RWPU7ivCuWuNGdEKI-vv2IhfwS_m0KynD-WbzbT2g', sheet: 'Креосы', range: 'A3:H80'},
+  creatives_tt: {id: '1W0RWPU7ivCuWuNGdEKI-vv2IhfwS_m0KynD-WbzbT2g', sheet: 'Креосы (ТикТок)', range: 'A3:H30'},
+  mgr_akmaral:  {id: '1TX3Ckjm8ZxZAPNsuXZ4pYaZfBUCn3ihkiJV3-9Rl2VY', sheet: 'Акмарал', range: 'A5:J460'},
+  mgr_arailym:  {id: '1TX3Ckjm8ZxZAPNsuXZ4pYaZfBUCn3ihkiJV3-9Rl2VY', sheet: 'Арайлым', range: 'A5:J460'},
+  mgr_ruslana:  {id: '1TX3Ckjm8ZxZAPNsuXZ4pYaZfBUCn3ihkiJV3-9Rl2VY', sheet: 'Руслана', range: 'A5:J460'},
+  mgr_veronika: {id: '1TX3Ckjm8ZxZAPNsuXZ4pYaZfBUCn3ihkiJV3-9Rl2VY', sheet: 'Вероника', range: 'A5:J460'},
+  mgr_asyl:     {id: '1TX3Ckjm8ZxZAPNsuXZ4pYaZfBUCn3ihkiJV3-9Rl2VY', sheet: 'Асыл', range: 'A5:J460'},
+  mgr_altynai:  {id: '1TX3Ckjm8ZxZAPNsuXZ4pYaZfBUCn3ihkiJV3-9Rl2VY', sheet: 'Алтынай', range: 'A5:J460'},
+  mgr_zara:     {id: '1TX3Ckjm8ZxZAPNsuXZ4pYaZfBUCn3ihkiJV3-9Rl2VY', sheet: 'Зара', range: 'A5:J460'},
+};
+const REFRESH_MS = 5 * 60 * 1000;
+d3.formatDefaultLocale({decimal: ',', thousands: '\u00a0', grouping: [3], currency: ['', '\u00a0$']});
+
+function parseCSV(text) {
+  const rows = []; let row = [], cell = '', q = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (q) { if (c === '"') { if (text[i + 1] === '"') { cell += '"'; i++; } else q = false; } else cell += c; }
+    else if (c === '"') q = true;
+    else if (c === ',') { row.push(cell); cell = ''; }
+    else if (c === '\n') { row.push(cell); rows.push(row); row = []; cell = ''; }
+    else if (c !== '\r') cell += c;
+  }
+  if (cell !== '' || row.length) { row.push(cell); rows.push(row); }
+  return rows;
+}
+
+const dash = (() => {
+  const loaders = {}, calcs = {}, state = {}, listeners = [];
+  let params = {period: 'month'};
+  const url = (s) => `https://docs.google.com/spreadsheets/d/${s.id}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(s.sheet)}&range=${s.range}&_=${Date.now()}`;
+  const notify = () => listeners.forEach((fn) => { try { fn(); } catch (e) { console.error(e); } });
+  const runCalcs = () => {
+    let changed = true, guard = 0;
+    while (changed && guard++ < 20) {
+      changed = false;
+      for (const [id, c] of Object.entries(calcs)) {
+        if (state[id] && state[id].status === 'ok') continue;
+        const ins = c.inputs.map((i) => state[i]);
+        if (ins.some((s) => !s || s.status === 'loading')) continue;
+        if (ins.some((s) => s.status === 'error')) { state[id] = {status: 'error', data: [], message: 'источник не загрузился'}; changed = true; continue; }
+        try { state[id] = {status: 'ok', data: c.fn(...ins.map((s) => s.data))}; } catch (e) { console.error(id, e); state[id] = {status: 'error', data: [], message: String(e)}; }
+        changed = true;
+      }
+    }
+  };
+  const load = async () => {
+    for (const id of Object.keys(SOURCES)) if (!state[id]) state[id] = {status: 'loading', data: []};
+    for (const id of Object.keys(calcs)) if (!state[id] || state[id].status !== 'ok') state[id] = {status: 'loading', data: []};
+    notify();
+    await Promise.all(Object.entries(SOURCES).map(async ([id, s]) => {
+      try {
+        const r = await fetch(url(s), {cache: 'no-store'});
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const values = parseCSV(await r.text());
+        const out = loaders[id] ? loaders[id]({answer: {values}}) : values;
+        state[id] = {status: 'ok', data: out.rows || out, columns: out.columns || []};
+      } catch (e) { console.error(id, e); state[id] = {status: 'error', data: [], message: String(e)}; }
+    }));
+    for (const id of Object.keys(calcs)) state[id] = {status: 'loading', data: []};
+    runCalcs();
+    const failed = Object.entries(state).filter(([, s]) => s.status === 'error').map(([id]) => id);
+    const st = document.getElementById('status');
+    if (st) st.textContent = (failed.length ? `Не загрузилось: ${failed.join(', ')} · ` : '') + 'Обновлено ' + new Date().toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit'});
+    notify();
+  };
+  return {
+    loader: (id, o) => { loaders[id] = o.fn; },
+    calc: (id, o) => { calcs[id] = o; },
+    data: (id) => state[id] || {status: 'loading', data: []},
+    onData: (fn) => { listeners.push(fn); fn(); },
+    params: () => params,
+    setParams: (p) => { params = {...params, ...p}; notify(); },
+    setLink: (name) => { if (name && location.hash !== '#' + name) history.replaceState(null, '', '#' + name); },
+    colors: ['#2F6BFF', '#111827', '#2FBF9A', '#F59E0B', '#8B5CF6', '#EC4899', '#14B8A6', '#64748B'],
+    refresh: load,
+    start: () => { load(); setInterval(load, REFRESH_MS); },
+  };
+})();
+</script>
+<script>
+// Loaders: each turns a Google Sheets get_values answer ({range, values}) into rows.
+dash.loader('ads_daily', {
+  description: 'Лист «Окт»: строка на день, расход и лиды Meta и TikTok. Даты дд.мм.гггг → гггг-мм-дд, десятичная запятая → число; пустые будущие дни пропускаются.',
+  fn: ({answer}) => {
+    let a = answer; if (typeof a === 'string') a = JSON.parse(a); if (Array.isArray(a) && a[0] && a[0].text) a = JSON.parse(a[0].text);
+    if (a && a.error) throw new Error(a.error.message || String(a.error));
+    const num = (s) => { if (s == null || s === '' || s === '-') return null; const n = Number(String(s).replace(/[$\s ]/g, '').replace(',', '.')); return isNaN(n) ? null : n; };
+    const date = (s) => { const m = /^(\d{2})\.(\d{2})\.(\d{4})/.exec(String(s || '')); return m ? `${m[3]}-${m[2]}-${m[1]}` : null; };
+    const rows = [];
+    for (const r of (a.values || []).slice(1)) {
+      const d = date(r[0]); if (!d) continue;
+      const fb_spend = num(r[1]) ?? 0, fb_leads = num(r[2]) ?? 0, tt_spend = num(r[4]) ?? 0, tt_leads = num(r[5]) ?? 0;
+      if (!fb_spend && !fb_leads && !tt_spend && !tt_leads) continue;
+      rows.push({date: d, fb_spend, fb_leads, tt_spend, tt_leads, spend: +(fb_spend + tt_spend).toFixed(2), leads: fb_leads + tt_leads});
+    }
+    return {columns: ['date', 'fb_spend', 'fb_leads', 'tt_spend', 'tt_leads', 'spend', 'leads'], rows};
+  },
+});
+
+dash.loader('crm_daily', {
+  description: 'Лист «Динамика»: команда по дням. Дата «01.10 чт» → гггг-мм-дд (год текущий), «-» → строка без данных пропускается.',
+  fn: ({answer}) => {
+    let a = answer; if (typeof a === 'string') a = JSON.parse(a); if (Array.isArray(a) && a[0] && a[0].text) a = JSON.parse(a[0].text);
+    if (a && a.error) throw new Error(a.error.message || String(a.error));
+    const num = (s) => { if (s == null || s === '' || s === '-') return null; const n = Number(String(s).replace(/[\s %]/g, '').replace(',', '.')); return isNaN(n) ? null : n; };
+    const now = new Date(); const y = now.getFullYear(), mNow = now.getMonth() + 1;
+    const date = (s) => { const m = /^(\d{2})\.(\d{2})/.exec(String(s || '')); if (!m) return null; const mm = +m[2]; const yy = mm > mNow + 1 ? y - 1 : y; return `${yy}-${m[2]}-${m[1]}`; };
+    const rows = [];
+    for (const r of (a.values || []).slice(1)) {
+      const d = date(r[0]); if (!d) continue;
+      if (num(r[1]) == null && num(r[7]) == null) continue;
+      rows.push({date: d, crm_leads: num(r[1]) ?? 0, taken: num(r[2]) ?? 0, noanswer: num(r[3]) ?? 0, qual: num(r[4]) ?? 0, nonqual: num(r[5]) ?? 0, consults: num(r[6]) ?? 0, contracts: num(r[7]) ?? 0});
+    }
+    return {columns: ['date', 'crm_leads', 'taken', 'noanswer', 'qual', 'nonqual', 'consults', 'contracts'], rows};
+  },
+});
+
+const mgrLoader = (name) => ({
+  description: `Лист «${name}»: с 5-й строки строка на день — дата «01.10 чт», лидов поступило, взято в работу, недозвон, квал, неквал, консультаций, подписано договоров, комментарий, месяц «Октябрь 2026» (из него берётся год). Дни без цифр и без комментария пропускаются.`,
+  fn: ({answer}) => {
+    let a = answer; if (typeof a === 'string') a = JSON.parse(a); if (Array.isArray(a) && a[0] && a[0].text) a = JSON.parse(a[0].text);
+    if (a && a.error) throw new Error(a.error.message || String(a.error));
+    const num = (s) => { if (s == null || s === '' || s === '-') return null; const n = Number(String(s).replace(/[\s\u00a0%]/g, '').replace(',', '.')); return isNaN(n) ? null : n; };
+    const rows = [];
+    for (const r of (a.values || [])) {
+      const m = /^(\d{2})\.(\d{2})/.exec(String(r[0] || '')); if (!m) continue;
+      const ym = /(\d{4})/.exec(String(r[9] || '')); const y = ym ? ym[1] : String(new Date().getFullYear());
+      const v = [1, 2, 3, 4, 5, 6, 7].map((i) => num(r[i])); const note = String(r[8] || '').trim();
+      if (v.every((x) => x == null) && !note) continue;
+      rows.push({manager: name, date: `${y}-${m[2]}-${m[1]}`, leads: v[0] ?? 0, taken: v[1] ?? 0, noanswer: v[2] ?? 0, qual: v[3] ?? 0, nonqual: v[4] ?? 0, consults: v[5] ?? 0, contracts: v[6] ?? 0, note});
+    }
+    return {columns: ['manager', 'date', 'leads', 'taken', 'noanswer', 'qual', 'nonqual', 'consults', 'contracts', 'note'], rows};
+  },
+});
+dash.loader('mgr_akmaral', mgrLoader('Акмарал'));
+dash.loader('mgr_arailym', mgrLoader('Арайлым'));
+dash.loader('mgr_ruslana', mgrLoader('Руслана'));
+dash.loader('mgr_veronika', mgrLoader('Вероника'));
+dash.loader('mgr_asyl', mgrLoader('Асыл'));
+dash.loader('mgr_altynai', mgrLoader('Алтынай'));
+dash.loader('mgr_zara', mgrLoader('Зара'));
+
+const creoLoader = (source) => ({
+  description: `Лист креативов ${source}: adset, кампания, бюджет, креатив, шаблонное сообщение (UTM), запущен, продажи. Пустые строки-разделители пропускаются, «$10,00» → 10.`,
+  fn: ({answer}) => {
+    let a = answer; if (typeof a === 'string') a = JSON.parse(a); if (Array.isArray(a) && a[0] && a[0].text) a = JSON.parse(a[0].text);
+    if (a && a.error) throw new Error(a.error.message || String(a.error));
+    const num = (s) => { if (s == null || s === '' || s === '-') return null; const n = Number(String(s).replace(/[$\s ]/g, '').replace(',', '.')); return isNaN(n) ? null : n; };
+    const rows = [];
+    for (const r of (a.values || []).slice(1)) {
+      const creative = String(r[3] || '').trim(), message = String(r[4] || '').trim();
+      if (!creative && !message) continue;
+      rows.push({source, adset: String(r[0] || '').trim(), campaign: String(r[1] || '').trim(), budget: num(r[2]), creative: creative || '—', message, running: /^да/i.test(String(r[5] || '')) ? 'В эфире' : 'Выкл', sales: num(r[6]) ?? 0, note: String(r[7] || '').trim()});
+    }
+    return {columns: ['source', 'adset', 'campaign', 'budget', 'creative', 'message', 'running', 'sales', 'note'], rows};
+  },
+});
+dash.loader('creatives_fb', creoLoader('Facebook'));
+dash.loader('creatives_tt', creoLoader('TikTok'));
+</script>
+<script>
+dash.calc('daily', {
+  title: 'Сводка по дням',
+  description: 'Расход и лиды из кабинетов (лист «Окт») плюс воронка менеджеров за тот же день (лист «Динамика»); CPL = расход ÷ лиды.',
+  inputs: ['ads_daily', 'crm_daily'],
+  fn: (ads_daily, crm_daily) => {
+    const m = {};
+    for (const r of ads_daily) m[r.date] = {date: r.date, fb_spend: r.fb_spend, fb_leads: r.fb_leads, tt_spend: r.tt_spend, tt_leads: r.tt_leads, spend: r.spend, leads: r.leads, crm_leads: 0, taken: 0, qual: 0, consults: 0, contracts: 0};
+    for (const r of crm_daily) { const x = m[r.date] ??= {date: r.date, fb_spend: 0, fb_leads: 0, tt_spend: 0, tt_leads: 0, spend: 0, leads: 0, crm_leads: 0, taken: 0, qual: 0, consults: 0, contracts: 0}; x.crm_leads = r.crm_leads; x.taken = r.taken; x.qual = r.qual; x.consults = r.consults; x.contracts = r.contracts; }
+    return Object.values(m).sort((a, b) => (a.date < b.date ? -1 : 1)).map((x) => ({...x, cpl: x.leads ? +(x.spend / x.leads).toFixed(2) : null}));
+  },
+});
+
+dash.calc('by_period', {
+  title: 'Итоги за день, неделю, месяц',
+  description: 'День = сегодня, если за него уже есть данные, иначе последний день с данными; неделя = 7 дней до него включительно; месяц = его календарный месяц. Цели месяца: 200 договоров, 7 750 лидов, $3 650 бюджета; цель окна = месячная ÷ дней в месяце × дней с данными в окне. Дельты к такому же окну до текущего.',
+  inputs: ['daily'],
+  fn: (daily) => {
+    if (!daily.length) return [];
+    const GOAL_MONTH = {contracts: 200, leads: 7750, spend: 3650};
+    const M = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
+    const MN = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+    const iso = (t) => t.toISOString().slice(0, 10);
+    const shift = (d, n) => { const t = new Date(d + 'T00:00:00Z'); t.setUTCDate(t.getUTCDate() + n); return iso(t); };
+    const lab = (d) => `${+d.slice(8, 10)} ${M[+d.slice(5, 7) - 1]}`;
+    const now = new Date(); const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    const withData = daily.filter((r) => r.spend || r.leads || r.contracts).map((r) => r.date);
+    const last = withData.includes(today) ? today : (withData.filter((d) => d <= today).pop() || withData[withData.length - 1]);
+    const ws = shift(last, -6), ms = last.slice(0, 7) + '-01';
+    const dim = new Date(Date.UTC(+last.slice(0, 4), +last.slice(5, 7), 0)).getUTCDate();
+    const pme = shift(ms, -1);
+    const windows = [
+      {period: 'day', label: lab(last), from: last, to: last, pfrom: shift(last, -1), pto: shift(last, -1)},
+      {period: 'week', label: `${lab(ws)} – ${lab(last)}`, from: ws, to: last, pfrom: shift(ws, -7), pto: shift(ws, -1)},
+      {period: 'month', label: MN[+last.slice(5, 7) - 1], from: ms, to: last, pfrom: pme.slice(0, 7) + '-01', pto: pme},
+    ];
+    const keys = ['fb_spend', 'tt_spend', 'spend', 'fb_leads', 'tt_leads', 'leads', 'crm_leads', 'taken', 'qual', 'consults', 'contracts'];
+    const total = (rows) => { const o = {}; for (const k of keys) o[k] = +rows.reduce((s, r) => s + (r[k] || 0), 0).toFixed(2); return o; };
+    const ratio = (a, b, dp) => (b ? +(a / b).toFixed(dp) : null);
+    const delta = (a, b) => (b ? Math.round(100 * (a - b) / b) : null);
+    return windows.map((w) => {
+      const rows = daily.filter((r) => r.date >= w.from && r.date <= w.to);
+      const prev = total(daily.filter((r) => r.date >= w.pfrom && r.date <= w.pto));
+      const days = rows.filter((r) => r.spend || r.leads || r.contracts).length || 1;
+      const o = {period: w.period, label: w.label, from: w.from, to: w.to, days, dim, ...total(rows)};
+      o.cpl = ratio(o.spend, o.leads, 2); o.fb_cpl = ratio(o.fb_spend, o.fb_leads, 2); o.tt_cpl = ratio(o.tt_spend, o.tt_leads, 2);
+      o.cpc = ratio(o.spend, o.contracts, 2);
+      o.cr = ratio(100 * o.contracts, o.leads, 2); o.cr_crm = ratio(100 * o.contracts, o.crm_leads, 1);
+      o.goal_month_contracts = GOAL_MONTH.contracts; o.goal_month_leads = GOAL_MONTH.leads; o.goal_month_spend = GOAL_MONTH.spend;
+      o.goal_contracts = +(GOAL_MONTH.contracts / dim * days).toFixed(1); o.goal_leads = Math.round(GOAL_MONTH.leads / dim * days); o.goal_spend = Math.round(GOAL_MONTH.spend / dim * days);
+      o.pct_contracts = Math.round(100 * o.contracts / GOAL_MONTH.contracts); o.pct_leads = Math.round(100 * o.leads / GOAL_MONTH.leads); o.pct_spend = Math.round(100 * o.spend / GOAL_MONTH.spend);
+      o.d_spend = delta(o.spend, prev.spend); o.d_leads = delta(o.leads, prev.leads); o.d_contracts = delta(o.contracts, prev.contracts);
+      return o;
+    });
+  },
+});
+
+dash.calc('creatives', {
+  title: 'Все креативы с продажами',
+  description: 'Строки листов «Креосы» и «Креосы (ТикТок)» вместе, пронумерованные; в эфире и с продажами сверху.',
+  inputs: ['creatives_fb', 'creatives_tt'],
+  fn: (creatives_fb, creatives_tt) => [...creatives_fb, ...creatives_tt]
+    .sort((a, b) => (b.sales - a.sales) || ((b.running === 'В эфире') - (a.running === 'В эфире')))
+    .map((r, i) => ({n: i + 1, ...r})),
+});
+
+dash.calc('creatives_live', {
+  title: 'Сколько креативов в эфире',
+  description: 'Число строк со статусом «В эфире» и всего строк в листах креативов.',
+  inputs: ['creatives'],
+  fn: (creatives) => [{live: creatives.filter((r) => r.running === 'В эфире').length, total: creatives.length}],
+});
+
+dash.calc('managers', {
+  title: 'Менеджеры по периодам',
+  description: 'Из листов менеджеров: суммы за день, 7 дней и месяц, конверсии лид → договор и консультация → договор, дата последней заполненной строки, заполнен ли последний день окна и сколько дней окна без записи.',
+  inputs: ['by_period', 'mgr_akmaral', 'mgr_arailym', 'mgr_ruslana', 'mgr_veronika', 'mgr_asyl', 'mgr_altynai', 'mgr_zara'],
+  fn: (by_period, mgr_akmaral, mgr_arailym, mgr_ruslana, mgr_veronika, mgr_asyl, mgr_altynai, mgr_zara) => {
+    const sheets = [['Акмарал', mgr_akmaral], ['Арайлым', mgr_arailym], ['Руслана', mgr_ruslana], ['Вероника', mgr_veronika], ['Асыл', mgr_asyl], ['Алтынай', mgr_altynai], ['Зара', mgr_zara]];
+    const shift = (d, n) => { const t = new Date(d + 'T00:00:00Z'); t.setUTCDate(t.getUTCDate() + n); return t.toISOString().slice(0, 10); };
+    return by_period.flatMap((p) => sheets.map(([manager, rows]) => {
+      const inWin = rows.filter((r) => r.date >= p.from && r.date <= p.to);
+      const sum = (k) => inWin.reduce((s, r) => s + (r[k] || 0), 0);
+      const o = {period: p.period, manager, leads: sum('leads'), taken: sum('taken'), qual: sum('qual'), consults: sum('consults'), contracts: sum('contracts')};
+      o.cr_lead = o.leads ? +(100 * o.contracts / o.leads).toFixed(1) : null;
+      o.cr_consult = o.consults ? +(100 * o.contracts / o.consults).toFixed(1) : null;
+      const dates = new Set(rows.map((r) => r.date));
+      o.last_filled = rows.filter((r) => r.date <= p.to).map((r) => r.date).sort().pop() || null;
+      o.filled_last = dates.has(p.to) ? 1 : 0;
+      let missing = 0; for (let d = p.from; d <= p.to; d = shift(d, 1)) if (!dates.has(d)) missing++;
+      o.missing_days = missing;
+      return o;
+    }));
+  },
+});
+</script>
+<script>
+const M = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
+const WD = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
+const fmtDay = (d) => `${+d.slice(8, 10)} ${M[+d.slice(5, 7) - 1]}`;
+const wd = (d) => WD[new Date(d + 'T00:00:00Z').getUTCDay()];
+const fmtInt = d3.format(','), fmt2 = d3.format(',.2f'), fmt1 = d3.format(',.1f');
+const fmtVal = (v, dp = 0) => (v == null ? '—' : dp === 2 ? fmt2(v) : dp === 1 ? fmt1(v) : fmtInt(Math.round(v)));
+const FIELD_DP = {spend: 2, fb_spend: 2, tt_spend: 2, cpl: 2, fb_cpl: 2, tt_cpl: 2, cpc: 2, cr: 2, cr_crm: 1, budget: 2, goal_contracts: 1};
+const C_FB = 'var(--lp-accent)', C_TT = '#111827', C_MINT = 'var(--lp-mint)';
+document.querySelectorAll('.lp-sw-fb').forEach((e) => { e.style.background = C_FB; });
+document.querySelectorAll('.lp-sw-tt').forEach((e) => { e.style.background = C_TT; });
+document.querySelectorAll('.lp-sw-mint').forEach((e) => { e.style.background = C_MINT; });
+
+const hour = new Date().getHours();
+document.getElementById('greeting').textContent = hour < 5 ? 'Доброй ночи' : hour < 12 ? 'Доброе утро' : hour < 18 ? 'Добрый день' : 'Добрый вечер';
+
+const pages = ['overview', 'dynamics', 'creatives', 'managers'];
+let page = pages.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'overview';
+const navBtns = document.querySelectorAll('.lp nav button');
+const showPage = (p) => {
+  page = p;
+  pages.forEach((id) => { document.getElementById(id).hidden = id !== p; });
+  navBtns.forEach((b) => { if (b.dataset.page === p) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
+  dash.setLink(p);
+  draw();
+};
+navBtns.forEach((b) => b.addEventListener('click', () => showPage(b.dataset.page)));
+window.addEventListener('hashchange', () => { const p = location.hash.slice(1); if (pages.includes(p) && p !== page) showPage(p); });
+
+const periodBtns = document.querySelectorAll('.lp-seg button');
+periodBtns.forEach((b) => b.addEventListener('click', () => dash.setParams({period: b.dataset.period})));
+
+const sortState = {key: 'sales', dir: -1};
+document.querySelectorAll('#creatives-table th[data-sort]').forEach((th) => th.addEventListener('click', () => {
+  const textCols = ['source', 'creative', 'campaign', 'message', 'running'];
+  sortState.dir = sortState.key === th.dataset.sort ? -sortState.dir : (textCols.includes(th.dataset.sort) ? 1 : -1);
+  sortState.key = th.dataset.sort; draw();
+}));
+
+const setText = (el, text) => { el.classList.remove('dash-skeleton'); el.textContent = text; };
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+
+function fillGoal(g, v, goal, pace) {
+  const pct = v != null && goal ? v / goal : null;
+  const bar = g.querySelector('.lp-bar'); bar.querySelector('i').style.width = pct == null ? '0' : Math.min(1, pct) * 100 + '%';
+  const target = pace != null ? pace : goal;
+  bar.dataset.met = v != null && target && v >= target ? '1' : '0';
+  const em = bar.querySelector('em'); if (em) em.style.setProperty('--p', pace != null && goal ? Math.min(1, pace / goal) * 100 + '%' : '0');
+}
+
+function drawDonut(svg, v, goal) {
+  const s = d3.select(svg); s.selectAll('*').remove();
+  const r = 48, c = 2 * Math.PI * r, pct = goal ? Math.min(1, (v || 0) / goal) : 0;
+  s.append('circle').attr('cx', 60).attr('cy', 60).attr('r', r).attr('fill', 'none').attr('stroke', 'var(--lp-tint)').attr('stroke-width', 12);
+  s.append('circle').attr('cx', 60).attr('cy', 60).attr('r', r).attr('fill', 'none').attr('stroke', pct >= 1 ? C_MINT : C_FB).attr('stroke-width', 12).attr('stroke-linecap', 'round')
+    .attr('stroke-dasharray', `${c * pct} ${c}`).attr('transform', 'rotate(-90 60 60)');
+  s.append('text').attr('x', 60).attr('y', 60).attr('text-anchor', 'middle').attr('dominant-baseline', 'central').attr('fill', 'var(--color-fg)').attr('font-weight', 600).attr('font-size', 20).text(goal ? d3.format('.0%')(pct) : '—');
+}
+
+function drawBars(box, rows, keys, colors, goal, period, fmt, names) {
+  const tip = box.querySelector('.lp-tip');
+  box.querySelectorAll('svg, .lp-fail').forEach((s) => s.remove());
+  box.classList.remove('dash-skeleton');
+  if (rows === 'error') { box.appendChild(el('div', 'lp-fail', 'Не загрузилось')); return; }
+  if (!rows || !rows.length || !box.clientWidth) return;
+  const W = box.clientWidth, H = 240, m = {top: 12, right: 8, bottom: 28, left: 32};
+  const svg = d3.select(box).append('svg').attr('viewBox', `0 0 ${W} ${H}`).attr('width', '100%').attr('height', H);
+  const tot = (r) => keys.reduce((s, k) => s + (r[k] || 0), 0);
+  const x = d3.scaleBand(rows.map((r) => r.date), [0, 1]).paddingInner(0.3).paddingOuter(0.1);
+  const y = d3.scaleLinear([0, Math.max(goal || 0, d3.max(rows, tot) || 0) * 1.08], [H - m.bottom, m.top]).nice();
+  const yAxis = svg.append('g').call(d3.axisLeft(y).ticks(4).tickSize(0).tickFormat(fmtInt)).attr('font-size', null).attr('font-family', null);
+  let lw = 0; yAxis.selectAll('text').each(function () { lw = Math.max(lw, this.getComputedTextLength()); });
+  m.left = Math.ceil(lw) + 10; yAxis.attr('transform', `translate(${m.left},0)`); yAxis.select('.domain').remove();
+  yAxis.selectAll('text').attr('fill', 'var(--color-fg-muted)').style('font-size', 'var(--cds-font-size-caption)');
+  x.range([m.left, W - m.right]);
+  svg.append('g').selectAll('line').data(y.ticks(4)).join('line').attr('x1', m.left).attr('x2', W - m.right).attr('y1', (d) => y(d)).attr('y2', (d) => y(d)).attr('stroke', 'var(--cds-chart-grid)');
+  const inP = (d) => period && d >= period.from && d <= period.to;
+  const g = svg.append('g');
+  for (const r of rows) {
+    let base = 0; const op = inP(r.date) ? 1 : 0.3;
+    keys.forEach((k, i) => { const v = r[k] || 0; g.append('rect').attr('x', x(r.date)).attr('width', x.bandwidth()).attr('y', y(base + v)).attr('height', Math.max(0, y(base) - y(base + v))).attr('fill', colors[i]).attr('rx', 4).attr('opacity', op); base += v; });
+  }
+  if (goal) svg.append('line').attr('x1', m.left).attr('x2', W - m.right).attr('y1', y(goal)).attr('y2', y(goal)).attr('stroke', 'var(--cds-chart-reference)').attr('stroke-dasharray', '4 4');
+  const every = Math.max(1, Math.ceil(rows.length * 34 / (W - m.left - m.right)));
+  svg.append('g').attr('transform', `translate(0,${H - m.bottom})`).selectAll('text').data(rows.filter((r, i) => (rows.length - 1 - i) % every === 0)).join('text')
+    .attr('x', (r) => x(r.date) + x.bandwidth() / 2).attr('y', 18).attr('text-anchor', 'middle').attr('fill', 'var(--color-fg-muted)').style('font-size', 'var(--cds-font-size-caption)').text((r) => fmtDay(r.date));
+  svg.append('line').attr('x1', m.left).attr('x2', W - m.right).attr('y1', y(0)).attr('y2', y(0)).attr('stroke', 'var(--cds-chart-axis)');
+  const hover = svg.append('rect').attr('fill', 'none').attr('stroke', 'var(--color-fg)').attr('rx', 4).attr('opacity', 0);
+  svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', (r) => x(r.date) - x.step() * 0.15).attr('width', x.step()).attr('y', m.top).attr('height', H - m.top - m.bottom).attr('fill', 'transparent')
+    .on('mousemove', (ev, r) => {
+      hover.attr('x', x(r.date)).attr('width', x.bandwidth()).attr('y', y(tot(r))).attr('height', Math.max(0, y(0) - y(tot(r)))).attr('opacity', 1);
+      tip.replaceChildren(el('div', 'lp-tip-h', `${fmtDay(r.date)}, ${wd(r.date)}`));
+      keys.forEach((k, i) => { const l = el('div'); const sw = el('i', 'lp-sw'); sw.style.background = colors[i]; l.appendChild(sw); l.appendChild(document.createTextNode(`${names[i]}: ${fmt(r[k] || 0)}`)); tip.appendChild(l); });
+      if (keys.length > 1) tip.appendChild(el('div', null, `Всего: ${fmt(tot(r))}`));
+      tip.style.display = 'block';
+      const bx = box.getBoundingClientRect(), px = ev.clientX - bx.left, py = ev.clientY - bx.top;
+      tip.style.left = Math.max(0, Math.min(px + 12, box.clientWidth - tip.offsetWidth - 4)) + 'px';
+      tip.style.top = Math.max(0, py - tip.offsetHeight - 12) + 'px';
+    })
+    .on('mouseleave', () => { tip.style.display = 'none'; hover.attr('opacity', 0); });
+}
+
+function fillTable(table, rows, cols, keyFn, emptyText) {
+  const tb = table.querySelector('tbody'); tb.replaceChildren();
+  if (!rows || !rows.length) { const tr = el('tr'); const td = el('td', 'lp-empty lp-l', rows ? emptyText : '—'); td.colSpan = cols.length; tr.appendChild(td); tb.appendChild(tr); return; }
+  for (const r of rows) {
+    const tr = el('tr'); tr.dataset.key = keyFn(r);
+    cols.forEach((c) => { const td = el('td', c.cls, c.fmt ? c.fmt(r[c.k], r) : (r[c.k] ?? '—')); if (c.deco) c.deco(td, r); tr.appendChild(td); });
+    tb.appendChild(tr);
+  }
+}
+
+let ds = {};
+function draw() {
+  const period = dash.params().period || 'month';
+  periodBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.period === period)));
+  document.querySelectorAll('.lp-follow [data-where^="period="]').forEach((e) => e.setAttribute('data-where', 'period=' + period));
+  const ok = ['by_period', 'daily', 'creatives', 'creatives_live', 'managers'].every((id) => ds[id] && ds[id].status === 'ok') && ds.by_period.data.length;
+  const okAds = ds.by_period && ds.by_period.status === 'ok' && ds.by_period.data.length;
+  const okCreo = ds.creatives && ds.creatives.status === 'ok';
+  const okMgr = ds.managers && ds.managers.status === 'ok';
+  const P = okAds ? ds.by_period.data.find((r) => r.period === period) : null;
+  const D = okAds ? ds.by_period.data.find((r) => r.period === 'day') : null;
+  const Mo = okAds ? ds.by_period.data.find((r) => r.period === 'month') : null;
+  if (Mo) document.getElementById('btn-month').textContent = Mo.label;
+  document.querySelectorAll('[data-field="label"]').forEach((e) => { const w = e.getAttribute('data-where').slice(7); const r = okAds ? ds.by_period.data.find((x) => x.period === w) : null; e.textContent = r ? r.label : '—'; });
+  ['days-note', 'funnel-note', 'daily-note'].forEach((id) => { document.getElementById(id).textContent = P ? P.label : '—'; });
+
+  // takeaway
+  const take = document.getElementById('takeaway');
+  if (P) {
+    const pl = P.goal_contracts ? Math.round(100 * P.contracts / P.goal_contracts) : null;
+    const best = okCreo ? ds.creatives.data[0] : null;
+    take.replaceChildren();
+    const parts = [[`${P.label}: `], [fmtInt(P.contracts), 1], [` договоров (${pl}% от темпа), `], [fmtInt(P.leads), 1], [` лидов по $${fmt2(P.cpl ?? 0)}, потрачено `], ['$' + fmt2(P.spend), 1], [P.cpc != null ? `, договор обходится в $${fmt2(P.cpc)}.` : '.']];
+    if (best && best.sales) parts.push([' Больше всего продаж у креатива '], [best.creative, 1], [` (${best.sales}).`]);
+    for (const [t, b] of parts) take.appendChild(b ? el('b', null, t) : document.createTextNode(t));
+  } else take.textContent = okAds === false ? '—' : (ds.by_period && ds.by_period.status === 'error' ? 'Таблица с расходом не загрузилась.' : '—');
+
+  // tiles
+  document.querySelectorAll('.lp-follow [data-field]').forEach((e) => { const f = e.getAttribute('data-field'); setText(e, P ? fmtVal(P[f], FIELD_DP[f] ?? 0) : '—'); });
+  document.querySelectorAll('.lp-delta').forEach((e) => {
+    const v = P ? P[e.dataset.delta] : null;
+    e.textContent = v == null ? '' : (v > 0 ? '+' : '') + v + '% к пред. периоду';
+    if (v == null) e.removeAttribute('data-good'); else e.dataset.good = String((v >= 0) === (e.dataset.goodUp === '1') ? 1 : 0);
+  });
+
+  // today card
+  const today = document.getElementById('today-card');
+  today.querySelectorAll('[data-where="period=day"][data-field]').forEach((e) => { const f = e.getAttribute('data-field'); if (f !== 'label') setText(e, D ? fmtVal(D[f], FIELD_DP[f] ?? 0) : '—'); });
+  drawDonut(document.getElementById('donut'), D ? D.spend : null, D ? D.goal_spend : null);
+  today.querySelectorAll('.lp-goal').forEach((g) => fillGoal(g, D ? D[g.dataset.goal] : null, D ? D['goal_' + g.dataset.goal] : null));
+  // pace card
+  const pace = document.getElementById('pace-card');
+  pace.querySelectorAll('[data-where="period=month"][data-field]').forEach((e) => { const f = e.getAttribute('data-field'); if (f !== 'label') setText(e, Mo ? fmtVal(Mo[f], FIELD_DP[f] ?? 0) : '—'); });
+  pace.querySelectorAll('.lp-goal').forEach((g) => fillGoal(g, Mo ? Mo[g.dataset.goal] : null, Mo ? Mo['goal_month_' + g.dataset.goal] : null, Mo ? Mo['goal_' + g.dataset.goal] : null));
+
+  // day cards
+  const days = document.getElementById('days'); days.replaceChildren();
+  if (ds.daily && ds.daily.status === 'ok' && P) {
+    const rows = ds.daily.data.filter((r) => r.date >= P.from && r.date <= P.to);
+    const maxS = d3.max(rows, (r) => r.spend) || 1, maxL = d3.max(rows, (r) => r.leads) || 1;
+    for (const r of rows) {
+      const c = el('div', 'lp-day'); c.dataset.today = r.date === (D && D.to) ? '1' : '0';
+      const h = el('div', 'lp-day-date'); h.appendChild(el('span', null, fmtDay(r.date))); h.appendChild(el('span', null, wd(r.date))); c.appendChild(h);
+      const metric = (label, field, v, text, max, mint) => { const b = el('div', 'lp-m'); b.appendChild(el('div', 'lp-cap', label)); const val = el('b', null, text); val.setAttribute('data-source', 'daily'); val.setAttribute('data-field', field); val.setAttribute('data-where', 'date=' + r.date); b.appendChild(val); if (max) { const bar = el('div', 'lp-mini' + (mint ? ' lp-mint' : '')); const i = el('i'); i.style.width = (100 * v / max) + '%'; bar.appendChild(i); b.appendChild(bar); } c.appendChild(b); };
+      metric('Расход', 'spend', r.spend, fmt2(r.spend) + ' $', maxS, false);
+      metric('Лиды', 'leads', r.leads, fmtInt(r.leads), maxL, true);
+      metric('Договоры', 'contracts', r.contracts, fmtInt(r.contracts), 0, false);
+      days.appendChild(c);
+    }
+    requestAnimationFrame(() => { days.scrollLeft = days.scrollWidth; });
+  } else days.appendChild(el('div', 'lp-empty', ds.daily && ds.daily.status === 'error' ? 'Не загрузилось' : '—'));
+
+  // live creatives
+  const live = document.getElementById('live-creos'); live.replaceChildren();
+  if (okCreo) {
+    const rows = ds.creatives.data.filter((r) => r.running === 'В эфире').slice(0, 8);
+    if (!rows.length) live.appendChild(el('div', 'lp-empty', 'В листах креативов нет строк со статусом «Да».'));
+    for (const r of rows) {
+      const c = el('div', 'lp-creo');
+      const top = el('div', 'lp-creo-top'); const chip = el('span', 'lp-chip', r.source); chip.dataset.src = r.source; top.appendChild(chip); const on = el('span', 'lp-chip', r.running); on.dataset.on = '1'; top.appendChild(on); c.appendChild(top);
+      c.appendChild(el('div', 'lp-creo-name', r.creative));
+      c.appendChild(el('div', 'lp-cap', [r.campaign, r.adset].filter(Boolean).join(' · ') || '—'));
+      c.appendChild(el('div', 'lp-creo-msg', r.message ? '«' + r.message + '»' : ''));
+      const f = el('div', 'lp-creo-foot'); const s = el('div'); const n = el('span', 'lp-creo-sales', fmtInt(r.sales)); n.setAttribute('data-source', 'creatives'); n.setAttribute('data-field', 'sales'); n.setAttribute('data-where', 'n=' + r.n); s.appendChild(n); s.appendChild(el('span', 'lp-cap', ' продаж')); f.appendChild(s);
+      f.appendChild(el('span', 'lp-cap', r.budget != null ? `$${fmtVal(r.budget, 0)}/день` : '')); c.appendChild(f);
+      live.appendChild(c);
+    }
+  } else live.appendChild(el('div', 'lp-empty', ds.creatives && ds.creatives.status === 'error' ? 'Не загрузилось' : '—'));
+  const liveBox = document.querySelector('.lp-aside-foot');
+  const lv = ds.creatives_live && ds.creatives_live.status === 'ok' ? ds.creatives_live.data[0] : null;
+  liveBox.querySelector('[data-field="live"]').textContent = lv ? fmtInt(lv.live) : '—';
+  liveBox.querySelector('[data-field="total"]').textContent = lv ? fmtInt(lv.total) : '—';
+  const fillLine = document.getElementById('fill-line');
+  if (okMgr && D) { const dayRows = ds.managers.data.filter((r) => r.period === 'day'); const done = dayRows.filter((r) => r.filled_last).length; fillLine.textContent = `Отчёт за ${D.label} сдали ${done} из ${dayRows.length} менеджеров` + (done < dayRows.length ? ': ' + dayRows.filter((r) => !r.filled_last).map((r) => r.manager).join(', ') : ''); }
+  else fillLine.textContent = ds.managers && ds.managers.status === 'error' ? 'Листы менеджеров не загрузились' : '—';
+
+  if (page === 'dynamics') {
+    const dailyRows = ds.daily && ds.daily.status === 'ok' ? ds.daily.data : (ds.daily && ds.daily.status === 'error' ? 'error' : null);
+    const dg = (k) => (Mo ? Mo['goal_month_' + k] / Mo.dim : 0);
+    drawBars(document.getElementById('chart-leads'), dailyRows, ['fb_leads', 'tt_leads'], [C_FB, C_TT], dg('leads'), P, fmtInt, ['Meta', 'TikTok']);
+    drawBars(document.getElementById('chart-spend'), dailyRows, ['fb_spend', 'tt_spend'], [C_FB, C_TT], dg('spend'), P, (v) => '$' + fmt2(v), ['Meta', 'TikTok']);
+    drawBars(document.getElementById('chart-contracts'), dailyRows, ['contracts'], [C_MINT], dg('contracts'), P, fmtInt, ['Договоры']);
+    // funnel
+    const fun = document.getElementById('funnel'); fun.replaceChildren();
+    if (P) {
+      const steps = [['Лиды из кабинетов', 'leads'], ['Дошло до CRM', 'crm_leads'], ['Взято в работу', 'taken'], ['Квалифицировано', 'qual'], ['Консультаций', 'consults'], ['Договоров', 'contracts']];
+      const max = P.leads || 1; let worst = -1, worstLoss = -1;
+      steps.forEach(([, k], i) => { if (i) { const prev = P[steps[i - 1][1]]; const loss = prev ? 1 - P[k] / prev : 0; if (loss > worstLoss) { worstLoss = loss; worst = i; } } });
+      steps.forEach(([name, k], i) => {
+        const row = el('div', 'lp-step'); row.appendChild(el('span', null, name));
+        const bar = el('div', 'lp-fbar'); if (i === worst) bar.dataset.worst = '1'; const fill = el('i'); fill.style.width = (100 * P[k] / max) + '%'; bar.appendChild(fill); row.appendChild(bar);
+        const right = el('div'); const v = el('b', null, fmtInt(P[k])); v.setAttribute('data-source', 'by_period'); v.setAttribute('data-field', k); v.setAttribute('data-where', 'period=' + period); right.appendChild(v);
+        if (i) { const prev = P[steps[i - 1][1]]; right.appendChild(el('div', 'lp-loss', prev ? '−' + d3.format('.0%')(Math.max(0, 1 - P[k] / prev)) : '')); }
+        row.appendChild(right); fun.appendChild(row);
+      });
+    } else fun.appendChild(el('div', 'lp-empty', '—'));
+    fillTable(document.getElementById('daily-table'), ds.daily && ds.daily.status === 'ok' && P ? ds.daily.data.filter((r) => r.date >= P.from && r.date <= P.to).slice().reverse() : null, [
+      {k: 'date', fmt: (d) => `${fmtDay(d)}, ${wd(d)}`, cls: 'lp-l'},
+      {k: 'fb_spend', fmt: (v) => fmt2(v)}, {k: 'tt_spend', fmt: (v) => fmt2(v)}, {k: 'spend', fmt: (v) => fmt2(v)},
+      {k: 'fb_leads', fmt: (v) => fmtInt(v), cls: 'lp-sec'}, {k: 'tt_leads', fmt: (v) => fmtInt(v), cls: 'lp-sec'}, {k: 'leads', fmt: (v) => fmtInt(v)},
+      {k: 'cpl', fmt: (v) => fmtVal(v, 2)}, {k: 'crm_leads', fmt: (v) => fmtInt(v), cls: 'lp-sec'}, {k: 'qual', fmt: (v) => fmtInt(v), cls: 'lp-sec'}, {k: 'consults', fmt: (v) => fmtInt(v), cls: 'lp-sec'}, {k: 'contracts', fmt: (v) => fmtInt(v)},
+    ], (r) => r.date, 'За этот период данных нет.');
+  }
+
+  if (page === 'creatives') {
+    const s = sortState;
+    document.querySelectorAll('#creatives-table th[data-sort]').forEach((th) => th.setAttribute('aria-sort', th.dataset.sort === s.key ? (s.dir < 0 ? 'descending' : 'ascending') : 'none'));
+    const rows = okCreo ? ds.creatives.data.slice().sort((a, b) => { const av = a[s.key], bv = b[s.key]; if (av == null && bv == null) return 0; if (av == null) return 1; if (bv == null) return -1; return typeof av === 'string' ? s.dir * av.localeCompare(bv) : s.dir * (av - bv); }) : (ds.creatives && ds.creatives.status === 'error' ? [] : null);
+    const maxSales = rows && rows.length ? d3.max(rows, (r) => r.sales) || 1 : 1;
+    fillTable(document.getElementById('creatives-table'), rows, [
+      {k: 'source', cls: 'lp-l', deco: (td, r) => { const c = el('span', 'lp-chip', r.source); c.dataset.src = r.source; td.replaceChildren(c); }},
+      {k: 'creative', cls: 'lp-l lp-wrap'},
+      {k: 'campaign', cls: 'lp-l lp-wrap lp-sec', fmt: (v, r) => [r.campaign, r.adset].filter(Boolean).join(' · ') || '—'},
+      {k: 'message', cls: 'lp-l lp-wrap lp-sec', fmt: (v) => v || '—'},
+      {k: 'running', deco: (td, r) => { const c = el('span', 'lp-chip', r.running); c.dataset.on = r.running === 'В эфире' ? '1' : '0'; td.replaceChildren(c); }},
+      {k: 'budget', fmt: (v) => fmtVal(v, 2)},
+      {k: 'sales', fmt: (v) => fmtInt(v), deco: (td, r) => { const bar = el('span', 'lp-cell-bar'); bar.style.setProperty('--w', (80 * r.sales / maxSales) + 'px'); td.prepend(bar); }},
+    ], (r) => String(r.n), 'Листы креативов пустые или не загрузились.');
+  }
+
+  if (page === 'managers') {
+    document.getElementById('managers-note').textContent = P ? P.label : '—';
+    const all = okMgr ? ds.managers.data : null;
+    const fill = document.getElementById('fill'); fill.replaceChildren();
+    if (all && D) {
+      for (const r of all.filter((x) => x.period === 'day')) {
+        const mo = all.find((x) => x.period === 'month' && x.manager === r.manager);
+        const item = el('div', 'lp-fill-item'); item.dataset.state = r.filled_last ? 'ok' : (r.last_filled ? 'warn' : 'bad');
+        item.appendChild(el('b', null, r.manager));
+        const right = el('div', 'lp-cap');
+        if (r.filled_last) right.textContent = 'заполнено';
+        else if (r.last_filled) right.textContent = 'последняя запись ' + fmtDay(r.last_filled);
+        else right.textContent = 'ни одной записи';
+        if (mo) { right.appendChild(document.createTextNode(' · пропусков за месяц ')); const b = el('b', null, fmtInt(mo.missing_days)); b.setAttribute('data-source', 'managers'); b.setAttribute('data-field', 'missing_days'); b.setAttribute('data-where', 'period=month&manager=' + r.manager); right.appendChild(b); }
+        item.appendChild(right); fill.appendChild(item);
+      }
+    } else fill.appendChild(el('div', 'lp-empty', ds.managers && ds.managers.status === 'error' ? 'Листы менеджеров не загрузились' : '—'));
+    const rows = all && P ? all.filter((r) => r.period === period).slice().sort((a, b) => b.contracts - a.contracts || b.leads - a.leads) : (ds.managers && ds.managers.status === 'error' ? [] : null);
+    const maxC = rows && rows.length ? d3.max(rows, (r) => r.contracts) || 1 : 1;
+    fillTable(document.getElementById('managers-table'), rows, [
+      {k: 'manager', cls: 'lp-l'}, {k: 'leads', fmt: (v) => fmtInt(v)}, {k: 'taken', fmt: (v) => fmtInt(v), cls: 'lp-sec'}, {k: 'qual', fmt: (v) => fmtInt(v), cls: 'lp-sec'}, {k: 'consults', fmt: (v) => fmtInt(v)},
+      {k: 'contracts', fmt: (v) => fmtInt(v), deco: (td, r) => { const bar = el('span', 'lp-cell-bar'); bar.style.setProperty('--w', (80 * r.contracts / maxC) + 'px'); td.prepend(bar); }},
+      {k: 'cr_lead', fmt: (v) => fmtVal(v, 1)}, {k: 'cr_consult', fmt: (v) => fmtVal(v, 1), cls: 'lp-sec'},
+      {k: 'missing_days', fmt: (v) => fmtInt(v), deco: (td, r) => { if (r.missing_days > 0) td.style.color = 'var(--color-bad)'; }},
+    ], (r) => `${encodeURIComponent(r.period)},${encodeURIComponent(r.manager)}`, 'Листы менеджеров пустые или не загрузились.');
+  }
+}
+
+dash.onData(() => {
+  ds = Object.fromEntries(['by_period', 'daily', 'creatives', 'creatives_live', 'managers'].map((id) => [id, dash.data(id)]));
+  draw();
+});
+showPage(page);
+dash.start();
+</script>
+</body>
+</html>
