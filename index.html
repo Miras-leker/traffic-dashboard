@@ -133,6 +133,18 @@
   .lp .lp-creo-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 4px; }
   .lp .lp-creo-stats b { display: block; font-size: var(--cds-font-size-body); font-weight: 600; }
   .lp .lp-creo-stats .lp-cap { font-size: 11px; }
+  .lp .lp-creo-btn { font: inherit; font-size: 11px; color: var(--lp-accent); background: var(--lp-tint); border: 0; border-radius: 999px; padding: 2px 9px; cursor: pointer; white-space: nowrap; }
+  .lp .lp-creo-btn:hover { background: color-mix(in srgb, var(--lp-accent) 16%, var(--color-panel)); }
+  .lp .lp-creo-tags { display: flex; gap: 6px; align-items: center; }
+  .lp dialog.lp-dlg { border: 1px solid var(--color-border-line); border-radius: var(--lp-radius); background: var(--color-panel); color: var(--color-fg); padding: 0; width: min(46rem, calc(100vw - 32px)); max-height: min(80vh, 44rem); box-shadow: var(--cds-shadow-popover); }
+  .lp dialog.lp-dlg::backdrop { background: rgba(15, 23, 42, .35); }
+  .lp .lp-dlg-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: var(--cds-pad-md); border-bottom: 1px solid var(--color-border-line); position: sticky; top: 0; background: var(--color-panel); z-index: 2; }
+  .lp .lp-dlg-x { font: inherit; font-size: 20px; line-height: 1; background: transparent; border: 0; color: var(--color-fg-muted); cursor: pointer; padding: 2px 6px; border-radius: 8px; }
+  .lp .lp-dlg-x:hover { background: var(--lp-soft); }
+  .lp .lp-dlg-body { padding: 0 var(--cds-pad-md) var(--cds-pad-md); overflow: auto; }
+  .lp .lp-dlg td, .lp .lp-dlg th { vertical-align: middle; cursor: default; }
+  .lp .lp-thumb { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; background: var(--lp-soft); display: block; }
+  .lp .lp-dlg tr[data-on="0"] td { color: var(--color-fg-muted); }
   .lp .lp-creo-sales { font-size: calc(var(--cds-font-size-title) * 1.1); font-weight: 600; letter-spacing: -.02em; }
   .lp .lp-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; padding: 2px 8px; border-radius: 999px; background: var(--lp-soft); color: var(--color-fg-muted); white-space: nowrap; }
   .lp .lp-chip[data-on="1"] { background: var(--lp-tint2); color: var(--lp-mint); }
@@ -240,6 +252,7 @@
         <div class="lp-card" id="live-card">
           <div class="lp-card-head"><div><div class="lp-eyebrow">Креативы</div><h2>Сейчас в эфире</h2></div><span class="lp-cap" id="live-note">Продажи по креативу берутся из листа «Креосы», колонка «продажи»</span></div>
           <div class="lp-creos" id="live-creos" data-source="live_cards"></div>
+          <dialog class="lp-dlg" id="creo-dlg"><div class="lp-dlg-head"><div><div class="lp-eyebrow">Креативы группы · за всё время</div><h3 id="creo-dlg-title">—</h3><div class="lp-cap" id="creo-dlg-sub"></div></div><button class="lp-dlg-x" type="button" aria-label="Закрыть" onclick="this.closest('dialog').close()">×</button></div><div class="lp-dlg-body"><table><thead><tr><th class="lp-l" colspan="2">Креатив</th><th>Потрачено</th><th>Лиды</th><th>Цена лида</th><th>Продажи</th></tr></thead><tbody id="creo-dlg-rows"></tbody></table></div></dialog>
         </div>
 
         <div class="lp-card" id="pace-card">
@@ -586,7 +599,7 @@ dash.calc('creatives', {
 
 dash.calc('live_cards', {
   title: 'Сейчас в эфире',
-  description: 'Facebook: группы объявлений в эфире из fb_live.json (траты и лиды за 7 дней), продажи — сумма по их креативам из листа «Креосы». Без fb_live.json — группы из листа. TikTok: одна карточка, бюджет и продажи из листа «Креосы (ТикТок)».',
+  description: 'Facebook: группы объявлений в эфире из fb_live.json (траты и лиды за всё время группы и по каждому креативу), продажи — из листа «Креосы» по названию креатива. Без fb_live.json — группы из листа. TikTok: одна карточка, бюджет и продажи из листа «Креосы (ТикТок)».',
   inputs: ['fb_live', 'creatives_fb', 'creatives_tt'],
   fn: (fb_live, creatives_fb, creatives_tt) => {
     const norm = (s) => String(s || '').toLowerCase().replace(/\s+/g, ' ').trim();
@@ -595,14 +608,16 @@ dash.calc('live_cards', {
     if (tt.length) cards.push({source: 'TikTok', title: 'TikTok', ads: [], sales: d3.sum(tt, (r) => r.sales), budget: d3.sum(tt, (r) => r.budget ?? 0) || null});
     // In «Креосы» column B (loaded as `campaign`) holds the ad set name, column D the ad name.
     if (fb_live && fb_live.adsets) {
+      const salesOf = (name) => d3.sum(creatives_fb.filter((r) => norm(r.creative) === norm(name)), (r) => r.sales);
       for (const a of fb_live.adsets) {
-        const ads = new Set(a.ads.map(norm)), set = norm(a.adset);
-        const rows = creatives_fb.filter((r) => ads.has(norm(r.creative)) || (set && norm(r.campaign) === set));
-        cards.push({source: 'Facebook', title: a.adset, sub: a.campaign, ads: a.ads, sales: d3.sum(rows, (r) => r.sales), budget: a.daily_budget, avg: a.avg_spend_day, leads: a.leads_7d, cpl: a.cpl, days: a.days, spend_today: a.spend_today, leads_today: a.leads_today, fb: true});
+        const ads = a.ads.map((x) => (typeof x === 'string' ? {name: x, on: true} : x)).map((x) => ({...x, sales: salesOf(x.name)}));
+        const names = new Set(ads.map((x) => norm(x.name))), set = norm(a.adset);
+        const rows = creatives_fb.filter((r) => names.has(norm(r.creative)) || (set && norm(r.campaign) === set));
+        cards.push({source: 'Facebook', title: a.adset, sub: a.campaign, ads, sales: d3.sum(rows, (r) => r.sales), budget: a.daily_budget, spend: a.spend ?? a.spend_7d, leads: a.leads ?? a.leads_7d, cpl: a.cpl, avg: a.avg_spend_day, days: a.days, since: a.since, fb: true});
       }
     } else {
       for (const [set, rows] of d3.group(creatives_fb.filter((r) => r.running === 'В эфире'), (r) => r.campaign || r.adset)) {
-        cards.push({source: 'Facebook', title: set || '—', ads: rows.map((r) => r.creative), sales: d3.sum(rows, (r) => r.sales), budget: d3.sum(rows, (r) => r.budget ?? 0) || null, fb: false});
+        cards.push({source: 'Facebook', title: set || '—', ads: rows.map((r) => ({name: r.creative, on: true, sales: r.sales})), sales: d3.sum(rows, (r) => r.sales), budget: d3.sum(rows, (r) => r.budget ?? 0) || null, fb: false});
       }
     }
     return cards;
@@ -751,6 +766,25 @@ function fillTable(table, rows, cols, keyFn, emptyText) {
   }
 }
 
+function openCreos(r) {
+  const dlg = document.getElementById('creo-dlg');
+  document.getElementById('creo-dlg-title').textContent = r.title;
+  document.getElementById('creo-dlg-sub').textContent = r.fb ? `${r.sub || ''}${r.since ? ` · с ${fmtDay(r.since)}` : ''}` : 'Цифры из Facebook появятся после подключения';
+  const tb = document.getElementById('creo-dlg-rows'); tb.replaceChildren();
+  const money = (v) => (v != null ? '$' + fmt2(v) : '—');
+  for (const x of r.ads) {
+    const tr = el('tr'); tr.dataset.on = x.on === false ? '0' : '1';
+    const tdi = el('td', 'lp-l'); tdi.style.width = '52px';
+    if (x.thumb) { const img = el('img', 'lp-thumb'); img.src = x.thumb; img.alt = ''; img.loading = 'lazy'; img.referrerPolicy = 'no-referrer'; img.onerror = () => img.replaceWith(el('div', 'lp-thumb')); tdi.appendChild(img); } else tdi.appendChild(el('div', 'lp-thumb'));
+    tr.appendChild(tdi);
+    const tdn = el('td', 'lp-l lp-wrap'); tdn.appendChild(el('div', null, x.name)); tdn.appendChild(el('div', 'lp-cap', x.on === false ? 'выключен' : 'в эфире')); tr.appendChild(tdn);
+    for (const v of [money(x.spend), x.leads != null ? fmtInt(x.leads) : '—', money(x.cpl), fmtInt(x.sales || 0)]) tr.appendChild(el('td', null, v));
+    tb.appendChild(tr);
+  }
+  dlg.showModal();
+}
+document.getElementById('creo-dlg').addEventListener('click', (e) => { if (e.target === e.currentTarget) e.currentTarget.close(); });
+
 let ds = {};
 function draw() {
   const period = dash.params().period || 'month';
@@ -817,25 +851,28 @@ function draw() {
   const live = document.getElementById('live-creos'); live.replaceChildren();
   const LC = ds.live_cards, fbl = ds.fb_live && ds.fb_live.data;
   document.getElementById('live-note').textContent = fbl
-    ? `Траты и лиды — Facebook за 7 дней, обновлено ${new Date(fbl.updated_at).toLocaleString('ru-RU', {day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'})}. Продажи — лист «Креосы»`
+    ? `Траты и лиды — Facebook за всё время, обновлено ${new Date(fbl.updated_at).toLocaleString('ru-RU', {day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'})}. Продажи — лист «Креосы»`
     : 'Facebook ещё не подключён — группы и продажи из листа «Креосы»';
   if (LC && LC.status === 'ok') {
     if (!LC.data.length) live.appendChild(el('div', 'lp-empty', 'Сейчас ничего не крутится.'));
     for (const r of LC.data) {
       const c = el('div', 'lp-creo');
-      const top = el('div', 'lp-creo-top'); const chip = el('span', 'lp-chip', r.source); chip.dataset.src = r.source; top.appendChild(chip); const on = el('span', 'lp-chip', 'В эфире'); on.dataset.on = '1'; top.appendChild(on); c.appendChild(top);
+      const top = el('div', 'lp-creo-top'); const chip = el('span', 'lp-chip', r.source); chip.dataset.src = r.source; top.appendChild(chip);
+      const tags = el('div', 'lp-creo-tags'); const on = el('span', 'lp-chip', 'В эфире'); on.dataset.on = '1'; tags.appendChild(on);
+      if (r.ads.length) { const b = el('button', 'lp-creo-btn', `Креативы · ${r.ads.length}`); b.type = 'button'; b.addEventListener('click', () => openCreos(r)); tags.appendChild(b); }
+      top.appendChild(tags); c.appendChild(top);
       c.appendChild(el('div', 'lp-creo-name', r.title));
       if (r.sub) c.appendChild(el('div', 'lp-cap', r.sub));
-      if (r.ads.length) c.appendChild(el('div', 'lp-creo-msg', 'Креативы: ' + r.ads.join(', ')));
+      if (r.ads.length) c.appendChild(el('div', 'lp-creo-msg', r.ads.map((x) => x.name).join(', ')));
       if (r.fb) {
         const st = el('div', 'lp-creo-stats');
-        for (const [label, v] of [[r.days ? `$/день · ${r.days} дн` : '$/день', r.avg != null ? '$' + fmt2(r.avg) : '—'], ['Лиды за 7 дн', fmtInt(r.leads)], ['Цена лида', r.cpl != null ? '$' + fmt2(r.cpl) : '—']]) {
+        for (const [label, v] of [['Потрачено', r.spend != null ? '$' + fmt2(r.spend) : '—'], ['Лиды', fmtInt(r.leads)], ['Цена лида', r.cpl != null ? '$' + fmt2(r.cpl) : '—']]) {
           const m = el('div'); m.appendChild(el('div', 'lp-cap', label)); m.appendChild(el('b', null, v)); st.appendChild(m);
         }
         c.appendChild(st);
       }
       const f = el('div', 'lp-creo-foot'); const s = el('div'); s.appendChild(el('span', 'lp-creo-sales', fmtInt(r.sales))); s.appendChild(el('span', 'lp-cap', ' продаж')); f.appendChild(s);
-      f.appendChild(el('span', 'lp-cap', r.fb ? `сегодня $${fmt2(r.spend_today)} · ${fmtInt(r.leads_today)} лид.` : r.budget != null ? `$${fmtVal(r.budget, 0)}/день` : '')); c.appendChild(f);
+      f.appendChild(el('span', 'lp-cap', r.fb ? (r.avg != null ? `~$${fmt2(r.avg)}/день` + (r.since ? ` · с ${fmtDay(r.since)}` : '') : '') : r.budget != null ? `$${fmtVal(r.budget, 0)}/день` : '')); c.appendChild(f);
       live.appendChild(c);
     }
   } else live.appendChild(el('div', 'lp-empty', LC && LC.status === 'error' ? 'Не загрузилось' : '—'));
