@@ -1,0 +1,58 @@
+{
+ "updated_at": "2026-10-24T13:07:40+00:00",
+ "period": "last_7d",
+ "adsets": [
+  {
+   "id": "120256848665020602",
+   "adset": "3 на 0030",
+   "campaign": "6 ADS | новые креосы | 21.10",
+   "ads": [
+    "7Q",
+    "8Q",
+    "9Q"
+   ],
+   "daily_budget": 15.0,
+   "days": 2,
+   "spend_7d": 33.64,
+   "leads_7d": 62,
+   "avg_spend_day": 16.82,
+   "cpl": 0.54,
+   "spend_today": 7.68,
+   "leads_today": 17
+  },
+  {
+   "id": "120256823267250602",
+   "adset": "1/2 - 0030 /20.10 — Копия",
+   "campaign": "20 окт. 1-2-4 ( 30$) — Копия",
+   "ads": [
+    "Q5",
+    "Q5 — Копия"
+   ],
+   "daily_budget": 10.0,
+   "days": 4,
+   "spend_7d": 33.91,
+   "leads_7d": 48,
+   "avg_spend_day": 8.48,
+   "cpl": 0.71,
+   "spend_today": 5.97,
+   "leads_today": 5
+  },
+  {
+   "id": "120256848775950602",
+   "adset": "2 на 4471",
+   "campaign": "6 ADS | новые креосы | 21.10",
+   "ads": [
+    "10Q",
+    "11Q"
+   ],
+   "daily_budget": 15.0,
+   "days": 2,
+   "spend_7d": 31.62,
+   "leads_7d": 38,
+   "avg_spend_day": 15.81,
+   "cpl": 0.83,
+   "spend_today": 6.97,
+   "leads_today": 17
+  }
+ ]
+}
