@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Pulls the ad sets that are live right now from the Facebook Marketing API and writes fb_live.json.
 
+Totals are for the whole life of each ad set (date_preset=maximum), per ad set and per ad.
 Run by .github/workflows/fb_live.yml. Needs two repository secrets:
-  FB_TOKEN       — system user token with ads_read on the ad account
+  FB_TOK         — system user token with ads_read on the ad account
   FB_AD_ACCOUNT  — ad account id, with or without the act_ prefix
 Optional env: FB_API_VERSION (default v23.0), FB_EXCLUDE (regex for campaign names to skip, default vacancies).
 """
@@ -31,6 +32,10 @@ LEAD_ACTIONS = {
 LEAD_FALLBACK = ['lead', 'onsite_conversion.lead_grouped', 'offsite_conversion.fb_pixel_lead', 'onsite_conversion.messaging_conversation_started_7d']
 
 
+class ApiError(Exception):
+    pass
+
+
 def get(path, **params):
     """GET with paging; returns the concatenated data list."""
     params['access_token'] = TOKEN
@@ -42,7 +47,7 @@ def get(path, **params):
                 body = json.load(r)
         except urllib.error.HTTPError as e:
             err = json.loads(e.read() or b'{}').get('error', {})
-            sys.exit(f'Facebook API error on {path}: {err.get("message") or e}')
+            raise ApiError(f'Facebook API error on {path}: {err.get("message") or e}')
         out += body.get('data', [])
         url = body.get('paging', {}).get('next')
     return out
@@ -56,6 +61,10 @@ def leads_of(actions, goal):
     return 0
 
 
+def natural(name):
+    return [int(t) if t.isdigit() else t.lower() for t in re.split(r'(\d+)', name)]
+
+
 def main():
     if not TOKEN or not ACCOUNT:
         sys.exit('FB_TOKEN and FB_AD_ACCOUNT must be set')
@@ -65,46 +74,61 @@ def main():
     adsets = get(f'{act}/adsets', fields='id,name,daily_budget,optimization_goal,campaign{name}', effective_status=live, limit=200)
     adsets = [a for a in adsets if not EXCLUDE.search(a.get('campaign', {}).get('name', ''))]
     ids = [a['id'] for a in adsets]
+    goal_of = {a['id']: a.get('optimization_goal', '') for a in adsets}
 
-    ads = get(f'{act}/ads', fields='name,adset_id', effective_status=live, limit=500)
-    ads_by_set = {}
-    for ad in ads:
-        ads_by_set.setdefault(ad['adset_id'], []).append(ad['name'])
-
-    week, today = {}, {}
+    per_day, per_ad, ads = {}, {}, []
     if ids:
         flt = json.dumps([{'field': 'adset.id', 'operator': 'IN', 'value': ids}])
-        # last_7d = 7 full days before today; time_increment=1 so we can count the days the ad set actually spent.
-        for r in get(f'{act}/insights', level='adset', date_preset='last_7d', time_increment=1, fields='adset_id,spend,actions', filtering=flt, limit=500):
-            week.setdefault(r['adset_id'], []).append(r)
-        for r in get(f'{act}/insights', level='adset', date_preset='today', fields='adset_id,spend,actions', filtering=flt, limit=500):
-            today[r['adset_id']] = r
+        # All ads of the live ad sets, switched off ones too: their spend is part of the ad set's total.
+        try:
+            ads = get(f'{act}/ads', fields='id,name,adset_id,effective_status,creative.thumbnail_width(240).thumbnail_height(240){thumbnail_url}', filtering=flt, limit=500)
+        except ApiError:
+            ads = get(f'{act}/ads', fields='id,name,adset_id,effective_status,creative{thumbnail_url}', filtering=flt, limit=500)
+        # date_preset=maximum = whole life; time_increment=1 at ad set level to count the days it actually spent.
+        for r in get(f'{act}/insights', level='adset', date_preset='maximum', time_increment=1, fields='adset_id,spend,actions', filtering=flt, limit=500):
+            per_day.setdefault(r['adset_id'], []).append(r)
+        for r in get(f'{act}/insights', level='ad', date_preset='maximum', fields='ad_id,spend,actions', filtering=flt, limit=500):
+            per_ad[r['ad_id']] = r
+
+    ads_by_set = {}
+    for ad in ads:
+        goal = goal_of.get(ad['adset_id'], '')
+        i = per_ad.get(ad['id'], {})
+        spend, leads = float(i.get('spend') or 0), leads_of(i.get('actions'), goal)
+        on = ad.get('effective_status') == 'ACTIVE'
+        if not on and not spend:
+            continue
+        ads_by_set.setdefault(ad['adset_id'], []).append({
+            'name': ad['name'],
+            'on': on,
+            'spend': round(spend, 2),
+            'leads': leads,
+            'cpl': round(spend / leads, 2) if leads else None,
+            'thumb': ad.get('creative', {}).get('thumbnail_url'),
+        })
 
     rows = []
     for a in adsets:
-        goal = a.get('optimization_goal', '')
-        days = [d for d in week.get(a['id'], []) if float(d.get('spend') or 0) > 0]
+        goal = goal_of[a['id']]
+        days = sorted((d for d in per_day.get(a['id'], []) if float(d.get('spend') or 0) > 0), key=lambda d: d['date_start'])
         spend = sum(float(d['spend']) for d in days)
         leads = sum(leads_of(d.get('actions'), goal) for d in days)
-        t = today.get(a['id'], {})
-        t_spend, t_leads = float(t.get('spend') or 0), leads_of(t.get('actions'), goal)
         rows.append({
             'id': a['id'],
             'adset': a['name'],
             'campaign': a.get('campaign', {}).get('name', ''),
-            'ads': sorted(ads_by_set.get(a['id'], []), key=lambda n: [int(t) if t.isdigit() else t.lower() for t in re.split(r'(\d+)', n)]),
+            'ads': sorted(ads_by_set.get(a['id'], []), key=lambda x: (not x['on'], natural(x['name']))),
             'daily_budget': int(a['daily_budget']) / 100 if a.get('daily_budget') else None,
+            'since': days[0]['date_start'] if days else None,
             'days': len(days),
-            'spend_7d': round(spend, 2),
-            'leads_7d': leads,
+            'spend': round(spend, 2),
+            'leads': leads,
             'avg_spend_day': round(spend / len(days), 2) if days else None,
             'cpl': round(spend / leads, 2) if leads else None,
-            'spend_today': round(t_spend, 2),
-            'leads_today': t_leads,
         })
-    rows.sort(key=lambda r: -(r['spend_7d'] + r['spend_today']))
+    rows.sort(key=lambda r: -r['spend'])
 
-    data = {'updated_at': datetime.now(timezone.utc).isoformat(timespec='seconds'), 'period': 'last_7d', 'adsets': rows}
+    data = {'updated_at': datetime.now(timezone.utc).isoformat(timespec='seconds'), 'period': 'maximum', 'adsets': rows}
     with open(OUT, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=1)
         f.write('\n')
@@ -112,4 +136,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except ApiError as e:
+        sys.exit(str(e))
