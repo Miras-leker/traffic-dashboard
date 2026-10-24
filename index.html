@@ -130,6 +130,9 @@
   .lp .lp-creo-name { font-weight: 600; font-size: var(--cds-font-size-body); overflow-wrap: anywhere; }
   .lp .lp-creo-msg { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .lp .lp-creo-foot { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-top: 4px; }
+  .lp .lp-creo-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 4px; }
+  .lp .lp-creo-stats b { display: block; font-size: var(--cds-font-size-body); font-weight: 600; }
+  .lp .lp-creo-stats .lp-cap { font-size: 11px; }
   .lp .lp-creo-sales { font-size: calc(var(--cds-font-size-title) * 1.1); font-weight: 600; letter-spacing: -.02em; }
   .lp .lp-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; padding: 2px 8px; border-radius: 999px; background: var(--lp-soft); color: var(--color-fg-muted); white-space: nowrap; }
   .lp .lp-chip[data-on="1"] { background: var(--lp-tint2); color: var(--lp-mint); }
@@ -235,8 +238,8 @@
         </div>
 
         <div class="lp-card" id="live-card">
-          <div class="lp-card-head"><div><div class="lp-eyebrow">Креативы</div><h2>Сейчас в эфире</h2></div><span class="lp-cap">Продажи по креативу берутся из листа «Креосы», колонка «продажи»</span></div>
-          <div class="lp-creos" id="live-creos" data-source="creatives"></div>
+          <div class="lp-card-head"><div><div class="lp-eyebrow">Креативы</div><h2>Сейчас в эфире</h2></div><span class="lp-cap" id="live-note">Продажи по креативу берутся из листа «Креосы», колонка «продажи»</span></div>
+          <div class="lp-creos" id="live-creos" data-source="live_cards"></div>
         </div>
 
         <div class="lp-card" id="pace-card">
@@ -357,6 +360,8 @@ const SOURCES = {
   mgr_altynai:  {id: '1TX3Ckjm8ZxZAPNsuXZ4pYaZfBUCn3ihkiJV3-9Rl2VY', sheet: 'Алтынай', range: 'A5:J460'},
   mgr_zara:     {id: '1TX3Ckjm8ZxZAPNsuXZ4pYaZfBUCn3ihkiJV3-9Rl2VY', sheet: 'Зара', range: 'A5:J460'},
 };
+// Files committed next to the page by GitHub Actions (scripts/fb_live.py). A missing file is not an error: data is null.
+const JSON_SOURCES = {fb_live: 'fb_live.json'};
 const REFRESH_MS = 5 * 60 * 1000;
 d3.formatDefaultLocale({decimal: ',', thousands: '\u00a0', grouping: [3], currency: ['', '\u00a0$']});
 
@@ -394,10 +399,10 @@ const dash = (() => {
     }
   };
   const load = async () => {
-    for (const id of Object.keys(SOURCES)) if (!state[id]) state[id] = {status: 'loading', data: []};
+    for (const id of [...Object.keys(SOURCES), ...Object.keys(JSON_SOURCES)]) if (!state[id]) state[id] = {status: 'loading', data: []};
     for (const id of Object.keys(calcs)) if (!state[id] || state[id].status !== 'ok') state[id] = {status: 'loading', data: []};
     notify();
-    await Promise.all(Object.entries(SOURCES).map(async ([id, s]) => {
+    await Promise.all([...Object.entries(SOURCES).map(async ([id, s]) => {
       try {
         const r = await fetch(url(s), {cache: 'no-store'});
         if (!r.ok) throw new Error('HTTP ' + r.status);
@@ -405,7 +410,12 @@ const dash = (() => {
         const out = loaders[id] ? loaders[id]({answer: {values}}) : values;
         state[id] = {status: 'ok', data: out.rows || out, columns: out.columns || []};
       } catch (e) { console.error(id, e); state[id] = {status: 'error', data: [], message: String(e)}; }
-    }));
+    }), ...Object.entries(JSON_SOURCES).map(async ([id, file]) => {
+      try {
+        const r = await fetch(`${file}?_=${Date.now()}`, {cache: 'no-store'});
+        state[id] = {status: 'ok', data: r.ok ? await r.json() : null};
+      } catch (e) { console.error(id, e); state[id] = {status: 'ok', data: null, message: String(e)}; }
+    })]);
     for (const id of Object.keys(calcs)) state[id] = {status: 'loading', data: []};
     runCalcs();
     const failed = Object.entries(state).filter(([, s]) => s.status === 'error').map(([id]) => id);
@@ -572,6 +582,31 @@ dash.calc('creatives', {
   fn: (creatives_fb, creatives_tt) => [...creatives_fb, ...creatives_tt]
     .sort((a, b) => (b.sales - a.sales) || ((b.running === 'В эфире') - (a.running === 'В эфире')))
     .map((r, i) => ({n: i + 1, ...r})),
+});
+
+dash.calc('live_cards', {
+  title: 'Сейчас в эфире',
+  description: 'Facebook: группы объявлений в эфире из fb_live.json (траты и лиды за 7 дней), продажи — сумма по их креативам из листа «Креосы». Без fb_live.json — группы из листа. TikTok: одна карточка, бюджет и продажи из листа «Креосы (ТикТок)».',
+  inputs: ['fb_live', 'creatives_fb', 'creatives_tt'],
+  fn: (fb_live, creatives_fb, creatives_tt) => {
+    const norm = (s) => String(s || '').toLowerCase().replace(/\s+/g, ' ').trim();
+    const cards = [];
+    const tt = creatives_tt.filter((r) => r.running === 'В эфире');
+    if (tt.length) cards.push({source: 'TikTok', title: 'TikTok', ads: [], sales: d3.sum(tt, (r) => r.sales), budget: d3.sum(tt, (r) => r.budget ?? 0) || null});
+    // In «Креосы» column B (loaded as `campaign`) holds the ad set name, column D the ad name.
+    if (fb_live && fb_live.adsets) {
+      for (const a of fb_live.adsets) {
+        const ads = new Set(a.ads.map(norm)), set = norm(a.adset);
+        const rows = creatives_fb.filter((r) => ads.has(norm(r.creative)) || (set && norm(r.campaign) === set));
+        cards.push({source: 'Facebook', title: a.adset, sub: a.campaign, ads: a.ads, sales: d3.sum(rows, (r) => r.sales), budget: a.daily_budget, avg: a.avg_spend_day, leads: a.leads_7d, cpl: a.cpl, days: a.days, spend_today: a.spend_today, leads_today: a.leads_today, fb: true});
+      }
+    } else {
+      for (const [set, rows] of d3.group(creatives_fb.filter((r) => r.running === 'В эфире'), (r) => r.campaign || r.adset)) {
+        cards.push({source: 'Facebook', title: set || '—', ads: rows.map((r) => r.creative), sales: d3.sum(rows, (r) => r.sales), budget: d3.sum(rows, (r) => r.budget ?? 0) || null, fb: false});
+      }
+    }
+    return cards;
+  },
 });
 
 dash.calc('creatives_live', {
@@ -778,22 +813,32 @@ function draw() {
     requestAnimationFrame(() => { days.scrollLeft = days.scrollWidth; });
   } else days.appendChild(el('div', 'lp-empty', ds.daily && ds.daily.status === 'error' ? 'Не загрузилось' : '—'));
 
-  // live creatives
+  // live creatives: one card per live ad set
   const live = document.getElementById('live-creos'); live.replaceChildren();
-  if (okCreo) {
-    const rows = ds.creatives.data.filter((r) => r.running === 'В эфире').slice(0, 8);
-    if (!rows.length) live.appendChild(el('div', 'lp-empty', 'В листах креативов нет строк со статусом «Да».'));
-    for (const r of rows) {
+  const LC = ds.live_cards, fbl = ds.fb_live && ds.fb_live.data;
+  document.getElementById('live-note').textContent = fbl
+    ? `Траты и лиды — Facebook за 7 дней, обновлено ${new Date(fbl.updated_at).toLocaleString('ru-RU', {day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'})}. Продажи — лист «Креосы»`
+    : 'Facebook ещё не подключён — группы и продажи из листа «Креосы»';
+  if (LC && LC.status === 'ok') {
+    if (!LC.data.length) live.appendChild(el('div', 'lp-empty', 'Сейчас ничего не крутится.'));
+    for (const r of LC.data) {
       const c = el('div', 'lp-creo');
-      const top = el('div', 'lp-creo-top'); const chip = el('span', 'lp-chip', r.source); chip.dataset.src = r.source; top.appendChild(chip); const on = el('span', 'lp-chip', r.running); on.dataset.on = '1'; top.appendChild(on); c.appendChild(top);
-      c.appendChild(el('div', 'lp-creo-name', r.creative));
-      c.appendChild(el('div', 'lp-cap', [r.campaign, r.adset].filter(Boolean).join(' · ') || '—'));
-      c.appendChild(el('div', 'lp-creo-msg', r.message ? '«' + r.message + '»' : ''));
-      const f = el('div', 'lp-creo-foot'); const s = el('div'); const n = el('span', 'lp-creo-sales', fmtInt(r.sales)); n.setAttribute('data-source', 'creatives'); n.setAttribute('data-field', 'sales'); n.setAttribute('data-where', 'n=' + r.n); s.appendChild(n); s.appendChild(el('span', 'lp-cap', ' продаж')); f.appendChild(s);
-      f.appendChild(el('span', 'lp-cap', r.budget != null ? `$${fmtVal(r.budget, 0)}/день` : '')); c.appendChild(f);
+      const top = el('div', 'lp-creo-top'); const chip = el('span', 'lp-chip', r.source); chip.dataset.src = r.source; top.appendChild(chip); const on = el('span', 'lp-chip', 'В эфире'); on.dataset.on = '1'; top.appendChild(on); c.appendChild(top);
+      c.appendChild(el('div', 'lp-creo-name', r.title));
+      if (r.sub) c.appendChild(el('div', 'lp-cap', r.sub));
+      if (r.ads.length) c.appendChild(el('div', 'lp-creo-msg', 'Креативы: ' + r.ads.join(', ')));
+      if (r.fb) {
+        const st = el('div', 'lp-creo-stats');
+        for (const [label, v] of [[r.days ? `$/день · ${r.days} дн` : '$/день', r.avg != null ? '$' + fmt2(r.avg) : '—'], ['Лиды за 7 дн', fmtInt(r.leads)], ['Цена лида', r.cpl != null ? '$' + fmt2(r.cpl) : '—']]) {
+          const m = el('div'); m.appendChild(el('div', 'lp-cap', label)); m.appendChild(el('b', null, v)); st.appendChild(m);
+        }
+        c.appendChild(st);
+      }
+      const f = el('div', 'lp-creo-foot'); const s = el('div'); s.appendChild(el('span', 'lp-creo-sales', fmtInt(r.sales))); s.appendChild(el('span', 'lp-cap', ' продаж')); f.appendChild(s);
+      f.appendChild(el('span', 'lp-cap', r.fb ? `сегодня $${fmt2(r.spend_today)} · ${fmtInt(r.leads_today)} лид.` : r.budget != null ? `$${fmtVal(r.budget, 0)}/день` : '')); c.appendChild(f);
       live.appendChild(c);
     }
-  } else live.appendChild(el('div', 'lp-empty', ds.creatives && ds.creatives.status === 'error' ? 'Не загрузилось' : '—'));
+  } else live.appendChild(el('div', 'lp-empty', LC && LC.status === 'error' ? 'Не загрузилось' : '—'));
   const liveBox = document.querySelector('.lp-aside-foot');
   const lv = ds.creatives_live && ds.creatives_live.status === 'ok' ? ds.creatives_live.data[0] : null;
   liveBox.querySelector('[data-field="live"]').textContent = lv ? fmtInt(lv.live) : '—';
@@ -875,7 +920,7 @@ function draw() {
 }
 
 dash.onData(() => {
-  ds = Object.fromEntries(['by_period', 'daily', 'creatives', 'creatives_live', 'managers'].map((id) => [id, dash.data(id)]));
+  ds = Object.fromEntries(['by_period', 'daily', 'creatives', 'creatives_live', 'live_cards', 'fb_live', 'managers'].map((id) => [id, dash.data(id)]));
   draw();
 });
 showPage(page);
