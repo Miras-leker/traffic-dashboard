@@ -1,0 +1,28 @@
+name: Facebook → fb_live.json
+
+on:
+  schedule:
+    - cron: '7 * * * *'   # every hour
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency: fb-live
+
+jobs:
+  pull:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pull live ad sets
+        env:
+          FB_TOKEN: ${{ secrets.FB_TOKEN }}
+          FB_AD_ACCOUNT: ${{ secrets.FB_AD_ACCOUNT }}
+        run: python3 scripts/fb_live.py
+      - name: Commit if changed
+        run: |
+          git add fb_live.json
+          git diff --cached --quiet && exit 0
+          git -c user.name=github-actions -c user.email=github-actions@users.noreply.github.com commit -m "fb_live: обновил данные Facebook"
+          git push
