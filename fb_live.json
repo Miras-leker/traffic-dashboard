@@ -1,58 +1,104 @@
 {
- "updated_at": "2026-10-24T13:07:40+00:00",
- "period": "last_7d",
+ "updated_at": "2026-10-24T13:15:57+00:00",
+ "period": "maximum",
  "adsets": [
   {
    "id": "120256848665020602",
    "adset": "3 на 0030",
    "campaign": "6 ADS | новые креосы | 21.10",
    "ads": [
-    "7Q",
-    "8Q",
-    "9Q"
+    {
+     "name": "7Q",
+     "on": true,
+     "spend": 13.55,
+     "leads": 23,
+     "cpl": 0.59,
+     "thumb": "https://scontent-iad6-1.xx.fbcdn.net/v/t15.5256-10/863247684_1168063015910015_1501260602116840543_n.jpg?_nc_cat=106&ccb=1-7&_nc_ohc=CUjl3Wj0zcYQ7kNvwE5eTJm&_nc_oc=Adozmc2rR7DjnJZjTWO13ximTBlP7F9N11__5S0mP98T65H0dG5j1B-PjIr-r8hcVxk&_nc_zt=23&_nc_ht=scontent-iad6-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=_rnfkAduPqaAlf180r8qPg&_nc_tpa=Q5bMBQIMXJR72KhVSbxo0T7kW-9Uerbea_31XDMlpt1Y4HV8uypXDCv7nZUtpxWggT1r6KINXu1kM5Ej7A&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQMhyEvtBiWWZhTdlf7wNcet07EKiZCGTDFWWhSSbKp4aA&oe=6AE2684F"
+    },
+    {
+     "name": "8Q",
+     "on": true,
+     "spend": 27.82,
+     "leads": 56,
+     "cpl": 0.5,
+     "thumb": "https://scontent-iad3-2.xx.fbcdn.net/v/t15.5256-10/862983471_1747057937424000_2469658915687141721_n.jpg?_nc_cat=105&ccb=1-7&_nc_ohc=rkn3oUJi1GUQ7kNvwGV8-DI&_nc_oc=AdpHObNLCaEOj6wZctNvgkkCR7otI71UGOxjQlQEKyRCUe9U2zfur6IdlUN3xgk3D64&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=_rnfkAduPqaAlf180r8qPg&_nc_tpa=Q5bMBQJSFBJauBxljnUGSsyHrqb4IeF3pLJ-nOu-qELnW4aelP79yfkRcXkvIAjKExkhMR7rUtIl9mGc7A&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQNSV4x3DYXyViYH6P3g4IaskY_-UjwhLM6FNMOpiKbitg&oe=6AE28112"
+    },
+    {
+     "name": "9Q",
+     "on": true,
+     "spend": 0.01,
+     "leads": 0,
+     "cpl": null,
+     "thumb": "https://scontent-iad3-2.xx.fbcdn.net/v/t15.5256-10/858383237_1695319588935923_7796034778636950777_n.jpg?_nc_cat=111&ccb=1-7&_nc_ohc=-bavZ4DjXqUQ7kNvwETvA9Z&_nc_oc=Adq5a87bJmMMOd5MNlubvd5bCc8UHuT8Jce9klxHJ9ZQMq5ff83kUaKqiJLJp29RZ7s&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=_rnfkAduPqaAlf180r8qPg&_nc_tpa=Q5bMBQLZx-Q5YA-1qLf8NEf8KES5vu3NYH6sGQdcXUvzgN8v-w4GCvUg98D76Fat0iO3SS3mjuXAnEBFNA&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQNJjUQXxeXt5MGbeObI7a_hmmZsP5xz2b_G7JyvOtp4Hg&oe=6AE2754B"
+    }
    ],
    "daily_budget": 15.0,
-   "days": 2,
-   "spend_7d": 33.64,
-   "leads_7d": 62,
-   "avg_spend_day": 16.82,
-   "cpl": 0.54,
-   "spend_today": 7.68,
-   "leads_today": 17
+   "since": "2026-10-22",
+   "days": 3,
+   "spend": 41.38,
+   "leads": 79,
+   "avg_spend_day": 13.79,
+   "cpl": 0.52
   },
   {
    "id": "120256823267250602",
    "adset": "1/2 - 0030 /20.10 — Копия",
    "campaign": "20 окт. 1-2-4 ( 30$) — Копия",
    "ads": [
-    "Q5",
-    "Q5 — Копия"
+    {
+     "name": "Q5",
+     "on": true,
+     "spend": 4.05,
+     "leads": 6,
+     "cpl": 0.67,
+     "thumb": "https://scontent-iad6-1.xx.fbcdn.net/v/t15.5256-10/858316342_941420838753199_8339283648990747655_n.jpg?_nc_cat=109&ccb=1-7&_nc_ohc=_DneAza4GJEQ7kNvwEeZ2KN&_nc_oc=AdpyKNe4JVHOMmTKGeCykhaWAJ1xkLF9g223cKPpp_GcGJ98DQFiqzGRmEwLS_w_yxA&_nc_zt=23&_nc_ht=scontent-iad6-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=_rnfkAduPqaAlf180r8qPg&_nc_tpa=Q5bMBQLH2jEKKedwUBbeNSFaSUjphJ9orbvKgO9PdnwtRV0b5WDh8cWAiyoZksD66X0FCH6jY0xoR0O5Dg&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQMgqx1x-zzExZvPpeQkmykqec3DYAzu-xo3u6KnaxonAQ&oe=6AE2679A"
+    },
+    {
+     "name": "Q5 — Копия",
+     "on": true,
+     "spend": 35.86,
+     "leads": 47,
+     "cpl": 0.76,
+     "thumb": "https://scontent-iad6-1.xx.fbcdn.net/v/t15.5256-10/858116256_1463214879242916_4591036095049083692_n.jpg?_nc_cat=102&ccb=1-7&_nc_ohc=vZhTyYWu2LIQ7kNvwGc9WIY&_nc_oc=AdqoAoGn7Bb3uIqBr8tDGGYwkfVi0Ur8J-8JHfoIaIWwKH4yncfsE-3Vh8cSSBbtDuU&_nc_zt=23&_nc_ht=scontent-iad6-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=_rnfkAduPqaAlf180r8qPg&_nc_tpa=Q5bMBQJHee4kYYSHgpwS47ZunTg-77JRf9OSd_UFvanxDG3JY34WSbqYXAURmSUKvNM1H6h3gTygFIQlOg&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQPauzfpIZ_BB7mdWx6ySuDqU8dyDTAaUpQZCcT4JuTMIQ&oe=6AE27791"
+    }
    ],
    "daily_budget": 10.0,
-   "days": 4,
-   "spend_7d": 33.91,
-   "leads_7d": 48,
-   "avg_spend_day": 8.48,
-   "cpl": 0.71,
-   "spend_today": 5.97,
-   "leads_today": 5
+   "since": "2026-10-20",
+   "days": 5,
+   "spend": 39.91,
+   "leads": 53,
+   "avg_spend_day": 7.98,
+   "cpl": 0.75
   },
   {
    "id": "120256848775950602",
    "adset": "2 на 4471",
    "campaign": "6 ADS | новые креосы | 21.10",
    "ads": [
-    "10Q",
-    "11Q"
+    {
+     "name": "10Q",
+     "on": true,
+     "spend": 1.17,
+     "leads": 0,
+     "cpl": null,
+     "thumb": "https://scontent-iad6-1.xx.fbcdn.net/v/t15.5256-10/856220539_1368013943062991_5590132408331166150_n.jpg?_nc_cat=109&ccb=1-7&_nc_ohc=RftS2rofXegQ7kNvwEq9AS0&_nc_oc=Ado0WJ8shy1scEmgrP_4PcgAGbNXLfUgc8JtEIYwjeukUugkHFeMGcg74MITXJ4430s&_nc_zt=23&_nc_ht=scontent-iad6-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=_rnfkAduPqaAlf180r8qPg&_nc_tpa=Q5bMBQJIQRD5miq3lFR6NUnFvuCZ2VeAk0EtWTJd8zlmMbw8JCldbITA4k7Ug840MdMwuedQNKBVKN0IIA&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQMh604McRjoLaIzFtsf-YRcNSUQPQ2sRLGW2EIu0pH2TA&oe=6AE28373"
+    },
+    {
+     "name": "11Q",
+     "on": true,
+     "spend": 37.63,
+     "leads": 56,
+     "cpl": 0.67,
+     "thumb": "https://scontent-iad3-2.xx.fbcdn.net/v/t15.5256-10/858997385_1691191505754752_3225601243316186071_n.jpg?_nc_cat=103&ccb=1-7&_nc_ohc=s7qAKAkkC5UQ7kNvwF_Wl3X&_nc_oc=Ado3kfscLTqQQsYzZ5NhITazxmkftQRPUYKXKw-yfb0YYXsY5vlyyONd-Oexp5d_1YY&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=_rnfkAduPqaAlf180r8qPg&_nc_tpa=Q5bMBQJksWpautEtFnI6m3EWQewtBoTMGyQCdnQYpyH_RUWUdavyQ3QYZCUJpwd1WLsYjgT8QdBiDi7jhg&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQNFz3OZQ8a2AOaY2MdQEiErYY2DU8foLtxu04053kbRdg&oe=6AE277D0"
+    }
    ],
    "daily_budget": 15.0,
-   "days": 2,
-   "spend_7d": 31.62,
-   "leads_7d": 38,
-   "avg_spend_day": 15.81,
-   "cpl": 0.83,
-   "spend_today": 6.97,
-   "leads_today": 17
+   "since": "2026-10-22",
+   "days": 3,
+   "spend": 38.8,
+   "leads": 56,
+   "avg_spend_day": 12.93,
+   "cpl": 0.69
   }
  ]
 }
