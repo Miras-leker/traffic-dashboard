@@ -182,6 +182,20 @@
   .lp [data-dash-source-state=empty] { color: transparent; }
   .lp [data-dash-source-state=refreshing] { opacity: .5; transition: opacity var(--cds-dur-slow); }
   .lp section[hidden] { display: none; }
+  .lp #platforms-card { background: linear-gradient(160deg, color-mix(in srgb, var(--lp-mint) 7%, var(--color-panel)) 0%, var(--color-panel) 60%); }
+  .lp .lp-vs { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); gap: var(--cds-gap-md); }
+  .lp .lp-plat { border: 1px solid var(--color-border-line); border-radius: 14px; padding: var(--cds-pad-md) var(--cds-pad-lg); display: grid; gap: var(--cds-gap-sm); background: var(--color-panel); min-width: 0; align-content: start; }
+  .lp .lp-plat[data-best="1"] { border-color: color-mix(in srgb, var(--lp-mint) 55%, var(--color-border-line)); box-shadow: 0 0 0 1px color-mix(in srgb, var(--lp-mint) 35%, transparent); }
+  .lp .lp-plat-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .lp .lp-plat-top .lp-cap b { color: var(--color-fg); font-size: var(--cds-font-size-heading); }
+  .lp .lp-plat-big { display: grid; gap: 2px; }
+  .lp .lp-plat-big .lp-tile-value { font-size: calc(var(--cds-font-size-title) * 1.6); }
+  .lp .lp-kv { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--cds-gap-sm); }
+  .lp .lp-kv > div { background: var(--lp-soft); border-radius: 10px; padding: 8px 12px; display: grid; gap: 2px; min-width: 0; }
+  .lp .lp-kv b { font-size: var(--cds-font-size-heading); }
+  .lp [data-win="1"] b, .lp .lp-plat-big[data-win="1"] .lp-tile-value { color: var(--lp-mint); }
+  .lp .lp-win { display: none; font-size: 11px; padding: 1px 7px; border-radius: 999px; background: var(--lp-tint2); color: var(--lp-mint); margin-left: 6px; vertical-align: 1px; }
+  .lp [data-win="1"] .lp-win { display: inline-block; }
   @media (max-width: 900px) {
     .lp { grid-template-columns: 1fr; }
     .lp .lp-aside { position: static; grid-template-columns: 1fr; gap: var(--cds-gap-sm); padding: var(--cds-pad-sm); }
@@ -228,6 +242,36 @@
           <div class="lp-tile" id="kpi-cpl"><div class="lp-tile-label">Цена заявки, $</div><div class="lp-tile-value dash-skeleton" data-source="by_period" data-field="cpl" data-where="period=month">—</div><div class="lp-tile-sub"><span>Meta <b data-source="by_period" data-field="fb_cpl" data-where="period=month">—</b></span><span>TikTok <b data-source="by_period" data-field="tt_cpl" data-where="period=month">—</b></span></div></div>
           <div class="lp-tile" id="kpi-cpc"><div class="lp-tile-label">Цена договора, $</div><div class="lp-tile-value dash-skeleton" data-source="by_period" data-field="cpc" data-where="period=month">—</div><div class="lp-tile-sub"><span>расход ÷ договоры</span></div></div>
           <div class="lp-tile" id="kpi-cr"><div class="lp-tile-label">Лид → договор, %</div><div class="lp-tile-value dash-skeleton" data-source="by_period" data-field="cr" data-where="period=month">—</div><div class="lp-tile-sub"><span>из CRM-лидов <b data-source="by_period" data-field="cr_crm" data-where="period=month">—</b>%</span></div></div>
+          <div class="lp-tile" id="kpi-qual"><div class="lp-tile-label">Лид → квал, %</div><div class="lp-tile-value dash-skeleton" data-source="by_period" data-field="cr_qual" data-where="period=month">—</div><div class="lp-tile-sub"><span>квал <b data-source="by_period" data-field="qual" data-where="period=month">—</b> из <b data-source="by_period" data-field="crm_leads" data-where="period=month">—</b> лидов в CRM</span></div></div>
+        </div>
+
+        <div class="lp-card" id="platforms-card">
+          <div class="lp-card-head"><div><div class="lp-eyebrow">UTM-сообщения · <span id="platforms-period">—</span></div><h2>Facebook или TikTok</h2></div><span class="lp-cap">Договоры посчитаны по сообщениям клиентов в группе «Договора Qabilet»</span></div>
+          <p class="lp-sub" id="platforms-take">—</p>
+          <div class="lp-vs">
+            <div class="lp-plat" data-plat="Facebook">
+              <div class="lp-plat-top"><span class="lp-chip" data-src="Facebook">Facebook</span><span class="lp-cap"><b data-pl="contracts">—</b> договоров</span></div>
+              <div class="lp-plat-big" data-cmp="cpc"><div class="lp-tile-label">Цена одного договора, $<span class="lp-win">дешевле</span></div><div class="lp-tile-value dash-skeleton" data-pl="cpc">—</div></div>
+              <div class="lp-kv">
+                <div data-cmp="cr"><span class="lp-cap">Лид → договор<span class="lp-win">лучше</span></span><b><span data-pl="cr">—</span>%</b></div>
+                <div data-cmp="cpl"><span class="lp-cap">Цена лида, $<span class="lp-win">дешевле</span></span><b data-pl="cpl">—</b></div>
+                <div><span class="lp-cap">Расход, $</span><b data-pl="spend">—</b></div>
+                <div><span class="lp-cap">Лидов</span><b data-pl="leads">—</b></div>
+              </div>
+              <p class="lp-cap">Без рекомендаций, удалённых чатов и заявок без фразы — <b data-pl="contracts_ads">—</b> договоров, <b data-pl="cr_ads">—</b>% и $<b data-pl="cpc_ads">—</b> за договор</p>
+            </div>
+            <div class="lp-plat" data-plat="TikTok">
+              <div class="lp-plat-top"><span class="lp-chip" data-src="TikTok">TikTok</span><span class="lp-cap"><b data-pl="contracts">—</b> договоров</span></div>
+              <div class="lp-plat-big" data-cmp="cpc"><div class="lp-tile-label">Цена одного договора, $<span class="lp-win">дешевле</span></div><div class="lp-tile-value dash-skeleton" data-pl="cpc">—</div></div>
+              <div class="lp-kv">
+                <div data-cmp="cr"><span class="lp-cap">Лид → договор<span class="lp-win">лучше</span></span><b><span data-pl="cr">—</span>%</b></div>
+                <div data-cmp="cpl"><span class="lp-cap">Цена лида, $<span class="lp-win">дешевле</span></span><b data-pl="cpl">—</b></div>
+                <div><span class="lp-cap">Расход, $</span><b data-pl="spend">—</b></div>
+                <div><span class="lp-cap">Лидов</span><b data-pl="leads">—</b></div>
+              </div>
+              <p class="lp-cap">Все договоры — с одного сообщения: «У меня есть официальный доход и кредиты…»</p>
+            </div>
+          </div>
         </div>
 
         <div class="lp-grid-31">
@@ -343,6 +387,7 @@
                 <th data-field="leads">Лидов</th>
                 <th data-field="taken" class="lp-sec">Взято</th>
                 <th data-field="qual" class="lp-sec">Квал</th>
+                <th data-field="cr_qual">Лид → квал %</th>
                 <th data-field="consults">Консультаций</th>
                 <th data-field="contracts">Договоров</th>
                 <th data-field="cr_lead">Лид → договор %</th>
@@ -374,7 +419,7 @@ const SOURCES = {
   mgr_zara:     {id: '1TX3Ckjm8ZxZAPNsuXZ4pYaZfBUCn3ihkiJV3-9Rl2VY', sheet: 'Зара', range: 'A5:J460'},
 };
 // Files committed next to the page by GitHub Actions (scripts/fb_live.py). A missing file is not an error: data is null.
-const JSON_SOURCES = {fb_live: 'fb_live.json'};
+const JSON_SOURCES = {fb_live: 'fb_live.json', utm_platforms: 'utm_platforms.json'};
 const REFRESH_MS = 5 * 60 * 1000;
 d3.formatDefaultLocale({decimal: ',', thousands: '\u00a0', grouping: [3], currency: ['', '\u00a0$']});
 
@@ -579,6 +624,7 @@ dash.calc('by_period', {
       o.cpl = ratio(o.spend, o.leads, 2); o.fb_cpl = ratio(o.fb_spend, o.fb_leads, 2); o.tt_cpl = ratio(o.tt_spend, o.tt_leads, 2);
       o.cpc = ratio(o.spend, o.contracts, 2);
       o.cr = ratio(100 * o.contracts, o.leads, 2); o.cr_crm = ratio(100 * o.contracts, o.crm_leads, 1);
+      o.cr_qual = ratio(100 * o.qual, o.crm_leads, 1);
       o.goal_month_contracts = GOAL_MONTH.contracts; o.goal_month_leads = GOAL_MONTH.leads; o.goal_month_spend = GOAL_MONTH.spend;
       o.goal_contracts = +(GOAL_MONTH.contracts / dim * days).toFixed(1); o.goal_leads = Math.round(GOAL_MONTH.leads / dim * days); o.goal_spend = Math.round(GOAL_MONTH.spend / dim * days);
       o.pct_contracts = Math.round(100 * o.contracts / GOAL_MONTH.contracts); o.pct_leads = Math.round(100 * o.leads / GOAL_MONTH.leads); o.pct_spend = Math.round(100 * o.spend / GOAL_MONTH.spend);
@@ -631,6 +677,32 @@ dash.calc('creatives_live', {
   fn: (creatives) => [{live: creatives.filter((r) => r.running === 'В эфире').length, total: creatives.length}],
 });
 
+dash.calc('platforms', {
+  title: 'Facebook и TikTok по UTM',
+  description: 'Из utm_platforms.json: цена лида = расход ÷ лиды, лид → договор = договоры ÷ лиды, цена договора = расход ÷ договоры; «_ads» — то же без рекомендаций, удалённых чатов и заявок без фразы. Без файла — пусто.',
+  inputs: ['utm_platforms'],
+  fn: (utm_platforms) => (utm_platforms && utm_platforms.rows ? utm_platforms.rows : []).map((r) => {
+    const spend = Number(r.spend), leads = Number(r.leads), contracts = Number(r.contracts), contracts_ads = Number(r.contracts_ads ?? r.contracts);
+    const ratio = (a, b, dp) => (b ? +(a / b).toFixed(dp) : null);
+    return {platform: r.platform, spend, leads, contracts, contracts_ads,
+      cpl: ratio(spend, leads, 2), cr: ratio(100 * contracts, leads, 2), cpc: ratio(spend, contracts, 2),
+      cr_ads: ratio(100 * contracts_ads, leads, 2), cpc_ads: ratio(spend, contracts_ads, 2)};
+  }),
+});
+
+dash.calc('platforms_vs', {
+  title: 'Насколько TikTok дешевле',
+  description: 'На сколько процентов договор и лид в TikTok дешевле, чем в Facebook (договор — и без рекомендаций), и на сколько конверсия Facebook выше.',
+  inputs: ['platforms'],
+  fn: (platforms) => {
+    const fb = platforms.find((r) => r.platform === 'Facebook'), tt = platforms.find((r) => r.platform === 'TikTok');
+    if (!fb || !tt || !fb.contracts || !fb.contracts_ads || !fb.leads || !tt.contracts || !tt.leads) return [];
+    // From raw spend/leads/contracts, not the rounded prices shown on the cards.
+    const cpc = (r, c) => r.spend / c, cpl = (r) => r.spend / r.leads, cr = (r) => r.contracts / r.leads;
+    return [{cpc_cheaper: Math.round(100 * (cpc(fb, fb.contracts) - cpc(tt, tt.contracts)) / cpc(fb, fb.contracts)), cpc_cheaper_ads: Math.round(100 * (cpc(fb, fb.contracts_ads) - cpc(tt, tt.contracts)) / cpc(fb, fb.contracts_ads)), cpl_cheaper: Math.round(100 * (cpl(fb) - cpl(tt)) / cpl(fb)), cr_better: Math.round(100 * (cr(fb) - cr(tt)) / cr(tt))}];
+  },
+});
+
 dash.calc('managers', {
   title: 'Менеджеры по периодам',
   description: 'Из листов менеджеров: суммы за день, 7 дней и месяц, конверсии лид → договор и консультация → договор, дата последней заполненной строки, заполнен ли последний день окна и сколько дней окна без записи.',
@@ -643,6 +715,7 @@ dash.calc('managers', {
       const sum = (k) => inWin.reduce((s, r) => s + (r[k] || 0), 0);
       const o = {period: p.period, manager, leads: sum('leads'), taken: sum('taken'), qual: sum('qual'), consults: sum('consults'), contracts: sum('contracts')};
       o.cr_lead = o.leads ? +(100 * o.contracts / o.leads).toFixed(1) : null;
+      o.cr_qual = o.leads ? +(100 * o.qual / o.leads).toFixed(1) : null;
       o.cr_consult = o.consults ? +(100 * o.contracts / o.consults).toFixed(1) : null;
       const dates = new Set(rows.map((r) => r.date));
       o.last_filled = rows.filter((r) => r.date <= p.to).map((r) => r.date).sort().pop() || null;
@@ -661,7 +734,7 @@ const fmtDay = (d) => `${+d.slice(8, 10)} ${M[+d.slice(5, 7) - 1]}`;
 const wd = (d) => WD[new Date(d + 'T00:00:00Z').getUTCDay()];
 const fmtInt = d3.format(','), fmt2 = d3.format(',.2f'), fmt1 = d3.format(',.1f');
 const fmtVal = (v, dp = 0) => (v == null ? '—' : dp === 2 ? fmt2(v) : dp === 1 ? fmt1(v) : fmtInt(Math.round(v)));
-const FIELD_DP = {spend: 2, fb_spend: 2, tt_spend: 2, cpl: 2, fb_cpl: 2, tt_cpl: 2, cpc: 2, cr: 2, cr_crm: 1, budget: 2, goal_contracts: 1};
+const FIELD_DP = {spend: 2, fb_spend: 2, tt_spend: 2, cpl: 2, fb_cpl: 2, tt_cpl: 2, cpc: 2, cr: 2, cr_crm: 1, cr_qual: 1, budget: 2, goal_contracts: 1};
 const C_FB = 'var(--lp-accent)', C_TT = '#111827', C_MINT = 'var(--lp-mint)';
 document.querySelectorAll('.lp-sw-fb').forEach((e) => { e.style.background = C_FB; });
 document.querySelectorAll('.lp-sw-tt').forEach((e) => { e.style.background = C_TT; });
@@ -830,6 +903,26 @@ function draw() {
   pace.querySelectorAll('[data-where="period=month"][data-field]').forEach((e) => { const f = e.getAttribute('data-field'); if (f !== 'label') setText(e, Mo ? fmtVal(Mo[f], FIELD_DP[f] ?? 0) : '—'); });
   pace.querySelectorAll('.lp-goal').forEach((g) => fillGoal(g, Mo ? Mo[g.dataset.goal] : null, Mo ? Mo['goal_month_' + g.dataset.goal] : null, Mo ? Mo['goal_' + g.dataset.goal] : null));
 
+  // Facebook vs TikTok (utm_platforms.json)
+  const okPl = ds.platforms && ds.platforms.status === 'ok' && ds.platforms.data.length;
+  const PL_DP = {cpl: 2, cr: 2, cpc: 2, cr_ads: 2, cpc_ads: 2};
+  const winners = {};
+  if (okPl) for (const [k, lower] of [['cpc', 1], ['cpl', 1], ['cr', 0]]) { const s = ds.platforms.data.filter((r) => r[k] != null).sort((a, b) => (lower ? a[k] - b[k] : b[k] - a[k])); if (s.length > 1) winners[k] = s[0].platform; }
+  document.querySelectorAll('#platforms-card .lp-plat').forEach((card) => {
+    const r = okPl ? ds.platforms.data.find((x) => x.platform === card.dataset.plat) : null;
+    card.querySelectorAll('[data-pl]').forEach((e) => { const f = e.dataset.pl; setText(e, r ? fmtVal(r[f], PL_DP[f] ?? 0) : '—'); });
+    card.querySelectorAll('[data-cmp]').forEach((c) => { c.dataset.win = winners[c.dataset.cmp] === card.dataset.plat ? '1' : '0'; });
+    card.dataset.best = winners.cpc === card.dataset.plat ? '1' : '0';
+  });
+  const up = ds.utm_platforms && ds.utm_platforms.data;
+  document.getElementById('platforms-period').textContent = up && up.period ? up.period : '—';
+  const plTake = document.getElementById('platforms-take'); plTake.replaceChildren();
+  const V = ds.platforms_vs && ds.platforms_vs.status === 'ok' ? ds.platforms_vs.data[0] : null;
+  if (V) {
+    const cheap = V.cpc_cheaper >= 0 ? 'TikTok' : 'Facebook';
+    for (const [t, b] of [[`Договор в ${cheap} дешевле на `], [Math.abs(V.cpc_cheaper) + '%', 1], [' (если у Facebook не считать рекомендации — на '], [Math.abs(V.cpc_cheaper_ads) + '%', 1], [`). Лид в TikTok ${V.cpl_cheaper >= 0 ? 'дешевле' : 'дороже'} на `], [Math.abs(V.cpl_cheaper) + '%', 1], [`, а лиды Facebook доходят до договора на `], [Math.abs(V.cr_better) + '%', 1], [V.cr_better >= 0 ? ' чаще.' : ' реже.']]) plTake.appendChild(b ? el('b', null, t) : document.createTextNode(t));
+  } else plTake.textContent = okPl === 0 || (up === null && ds.utm_platforms.status === 'ok') ? 'Нет файла utm_platforms.json с цифрами площадок.' : '—';
+
   // day cards
   const days = document.getElementById('days'); days.replaceChildren();
   if (ds.daily && ds.daily.status === 'ok' && P) {
@@ -948,7 +1041,7 @@ function draw() {
     const rows = all && P ? all.filter((r) => r.period === period).slice().sort((a, b) => b.contracts - a.contracts || b.leads - a.leads) : (ds.managers && ds.managers.status === 'error' ? [] : null);
     const maxC = rows && rows.length ? d3.max(rows, (r) => r.contracts) || 1 : 1;
     fillTable(document.getElementById('managers-table'), rows, [
-      {k: 'manager', cls: 'lp-l'}, {k: 'leads', fmt: (v) => fmtInt(v)}, {k: 'taken', fmt: (v) => fmtInt(v), cls: 'lp-sec'}, {k: 'qual', fmt: (v) => fmtInt(v), cls: 'lp-sec'}, {k: 'consults', fmt: (v) => fmtInt(v)},
+      {k: 'manager', cls: 'lp-l'}, {k: 'leads', fmt: (v) => fmtInt(v)}, {k: 'taken', fmt: (v) => fmtInt(v), cls: 'lp-sec'}, {k: 'qual', fmt: (v) => fmtInt(v), cls: 'lp-sec'}, {k: 'cr_qual', fmt: (v) => fmtVal(v, 1)}, {k: 'consults', fmt: (v) => fmtInt(v)},
       {k: 'contracts', fmt: (v) => fmtInt(v), deco: (td, r) => { const bar = el('span', 'lp-cell-bar'); bar.style.setProperty('--w', (80 * r.contracts / maxC) + 'px'); td.prepend(bar); }},
       {k: 'cr_lead', fmt: (v) => fmtVal(v, 1)}, {k: 'cr_consult', fmt: (v) => fmtVal(v, 1), cls: 'lp-sec'},
       {k: 'missing_days', fmt: (v) => fmtInt(v), deco: (td, r) => { if (r.missing_days > 0) td.style.color = 'var(--color-bad)'; }},
@@ -957,7 +1050,7 @@ function draw() {
 }
 
 dash.onData(() => {
-  ds = Object.fromEntries(['by_period', 'daily', 'creatives', 'creatives_live', 'live_cards', 'fb_live', 'managers'].map((id) => [id, dash.data(id)]));
+  ds = Object.fromEntries(['by_period', 'daily', 'creatives', 'creatives_live', 'live_cards', 'fb_live', 'managers', 'utm_platforms', 'platforms', 'platforms_vs'].map((id) => [id, dash.data(id)]));
   draw();
 });
 showPage(page);

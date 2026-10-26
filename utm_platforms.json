@@ -1,0 +1,9 @@
+{
+ "period": "1–26 октября",
+ "note": "Расход и лиды — по кабинетам; договоры посчитаны по сообщениям клиентов в WhatsApp-группе «Договора Qabilet». TikTok — сообщение «У меня есть официальный доход и кредиты…», Facebook — все остальные. contracts_ads — без рекомендаций, удалённых чатов и заявок без фразы.",
+ "updated_at": "2026-10-26",
+ "rows": [
+  {"platform": "Facebook", "spend": 2000, "leads": 3120, "contracts": 70, "contracts_ads": 59},
+  {"platform": "TikTok", "spend": 880, "leads": 2550, "contracts": 40, "contracts_ads": 40}
+ ]
+}
