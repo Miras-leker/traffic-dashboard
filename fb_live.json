@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-31T21:27:16+00:00",
+ "updated_at": "2026-11-01T01:04:04+00:00",
  "period": "maximum",
  "adsets": [
   {
@@ -10,10 +10,10 @@
     {
      "name": "N103_novosti-kazhdyi-vtoroi",
      "on": true,
-     "spend": 277.88,
-     "leads": 683,
+     "spend": 278.37,
+     "leads": 685,
      "cpl": 0.41,
-     "thumb": "https://scontent-iad3-1.xx.fbcdn.net/v/t15.5256-10/823010757_1758728785339753_879061441183012990_n.jpg?_nc_cat=110&ccb=1-7&_nc_ohc=cfclTXMdx6sQ7kNvwG1asT5&_nc_oc=AdrhiDDGZ1znfS1-qEFu_-0hBawv-vnPfojJYmxB7gtyWjid24S1CU434_MbP1964-8&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=RukqIenzB-xE0C7UJZSLMw&_nc_tpa=Q5bMBQJDOYAKpna526gYhnC-_Pek3bNGHhqDcE7384iwzByPTlZ4uzP5gYSxO1oDAz7Vf_7ejWJ6RmZ4ww&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQQhf9_v3t7lVSeGzz2G0GXu-8QRpRD173lGgdtXaW8iAg&oe=6AEC3B39"
+     "thumb": "https://scontent-ord5-2.xx.fbcdn.net/v/t15.5256-10/823010757_1758728785339753_879061441183012990_n.jpg?_nc_cat=110&ccb=1-7&_nc_ohc=cfclTXMdx6sQ7kNvwH7TkcU&_nc_oc=AdrNKAdEM7Vfsj1Q4O1LPPWX-HwpUmf73lYj9-ze1iEJIdLjIYkZCSM9zy1IQPiY6-g&_nc_zt=23&_nc_ht=scontent-ord5-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=I36EochQjeRJ1QSPDn4G2A&_nc_tpa=Q5bMBQJRJtSbj6Bz_jdtHYz2-j0EAJa5u6pJxga91L3lPBBujuBanzKOFevef8zeH6dXQ1KTbJc6U4psKw&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQS_uBbZWxeLPVAUZDIospAm-pNF3U8BsbAi5O_67QfkBQ&oe=6AEC7379"
     },
     {
      "name": "lv_1_202609",
@@ -21,7 +21,7 @@
      "spend": 0.51,
      "leads": 0,
      "cpl": null,
-     "thumb": "https://scontent-iad3-1.xx.fbcdn.net/v/t15.5256-10/825567068_1072465758916917_7904721555665644545_n.jpg?_nc_cat=110&ccb=1-7&_nc_ohc=34KyB8JLEEAQ7kNvwGOaiyb&_nc_oc=AdpOaI8ysy47oJNfrxSIlvEziPtaJGhMSHtfbOop1amIqkZCbjD5WxmHeoTn7idX3Mg&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=RukqIenzB-xE0C7UJZSLMw&_nc_tpa=Q5bMBQLzPC69YOVtISYmLTHYZtQqbMd76S_HVHa-NBEcymFrG0vl5JN0DkbvUeA0qnNB-Q2rTHdJN5S1Gg&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQQ8WduM-aJN3NTJZIiuQ8No5GsbzHK-sWrTaxa0to8XEQ&oe=6AEC4594"
+     "thumb": "https://scontent-ord5-2.xx.fbcdn.net/v/t15.5256-10/825567068_1072465758916917_7904721555665644545_n.jpg?_nc_cat=110&ccb=1-7&_nc_ohc=WpdwWvNgvJwQ7kNvwGY2KwC&_nc_oc=Adp4eIvFdBKU5XHwWTHjGmDHJEWknIABAL1LAsfmpYnt1m8isq1cTR-mHuak9V5P6Qs&_nc_zt=23&_nc_ht=scontent-ord5-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=I36EochQjeRJ1QSPDn4G2A&_nc_tpa=Q5bMBQIUBJia_cZV4Jjme8hOJDwiGKHNiKdAXV5VLiM3DX-75SdysysKxgB1f9e1Ii6U5qTx2jEE1wxCWw&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQQ47zUskEGZ35ld6nLXdT7SjpmqznLPJfIbuj2jktpq3Q&oe=6AEC7DD4"
     },
     {
      "name": "lv_2_202609",
@@ -29,15 +29,15 @@
      "spend": 0.27,
      "leads": 0,
      "cpl": null,
-     "thumb": "https://scontent-iad3-2.xx.fbcdn.net/v/t15.5256-10/828201250_1445066634201066_556739134948293316_n.jpg?_nc_cat=103&ccb=1-7&_nc_ohc=yX_4zbr2oIQQ7kNvwFpUYsF&_nc_oc=AdrLhxnu9ogjXIZQd-513PtWtHEBjUR__Kry2KLHgxAZtgkvUmh7DXN8ZLCAe39HE4c&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=RukqIenzB-xE0C7UJZSLMw&_nc_tpa=Q5bMBQKKWrJnkJR8Osu00KNVQephOylR_jzliHwLyfDLLFnMCJWzzfbC4Ky-nirTCUxVwx591oXtN147ig&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQQpUN6v60zfXWLIWKvQQjUCF7616JbMf8z0WnKWyAtcWg&oe=6AEC252B"
+     "thumb": "https://scontent-ord5-2.xx.fbcdn.net/v/t15.5256-10/828201250_1445066634201066_556739134948293316_n.jpg?_nc_cat=103&ccb=1-7&_nc_ohc=yX_4zbr2oIQQ7kNvwG28rTG&_nc_oc=Adr6V5o9g0I8hNCTIe9livPN8vwbGTAJqkRgkRXI0u0IZj-9RytvT4Lf9V7mHXfnx0Q&_nc_zt=23&_nc_ht=scontent-ord5-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=I36EochQjeRJ1QSPDn4G2A&_nc_tpa=Q5bMBQLt65hTg-Z6Uogl7dBvUfFSW3K4KR7aDmEt_YtUu8iHQ7jIAcsVo_Q2uJItFIPsD8Lh6RIiX4DZWw&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQSpxmnv0wgjc_REa8eqaDCVWl7MuSmGYk2c2kE1Y5ZZ2Q&oe=6AEC5D6B"
     }
    ],
    "daily_budget": 10.0,
    "since": "2026-09-27",
    "days": 28,
-   "spend": 278.66,
-   "leads": 682,
-   "avg_spend_day": 9.95,
+   "spend": 279.15,
+   "leads": 684,
+   "avg_spend_day": 9.97,
    "cpl": 0.41
   },
   {
@@ -48,10 +48,10 @@
     {
      "name": "i'm a man video",
      "on": true,
-     "spend": 141.5,
-     "leads": 363,
+     "spend": 141.97,
+     "leads": 364,
      "cpl": 0.39,
-     "thumb": "https://scontent-iad3-2.xx.fbcdn.net/v/t15.5256-10/725578709_1402229895033167_3263594165126948462_n.jpg?_nc_cat=105&ccb=1-7&_nc_ohc=YiM-HF1wVyUQ7kNvwHDQsDd&_nc_oc=Adoi_nk81-AS2OxL6JXcxtXqy_Gks8jvDLVJO5myeSGRtlpAXtGqeDN0ofPhWvj2bKw&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=RukqIenzB-xE0C7UJZSLMw&_nc_tpa=Q5bMBQIQEJa7JTELx_0eQDxUBN4ibuFDAm6-qDkNWEcPP1mEh72AJz-KKZ9yNMp2_r0P8zXwOifiPtSryQ&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQSAu3Q1oLKR3Idcsneqo8ggSJj9SL5zxq4SW27zP75z_Q&oe=6AEC3FA1"
+     "thumb": "https://scontent-ord5-2.xx.fbcdn.net/v/t15.5256-10/725578709_1402229895033167_3263594165126948462_n.jpg?_nc_cat=105&ccb=1-7&_nc_ohc=YiM-HF1wVyUQ7kNvwFYCn9e&_nc_oc=AdqB7LkBv-uLHA3BMXHQMkLvPqx1QB_bKgb8HjahIqbbp_u8l3jgbwpZ2DWUAwMwnyw&_nc_zt=23&_nc_ht=scontent-ord5-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=I36EochQjeRJ1QSPDn4G2A&_nc_tpa=Q5bMBQK6DyEWLxEU8tNNyI-IlZUAYZ4fjgIL8cr4rfe-oOn1wRZijjz_zGNAyEtM2RmrN-sHAk7rUINt8w&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQRFk19Glrb4RWUt_EXLQFVH3LvfEQPBqUWifaK3CzjZDQ&oe=6AEC77E1"
     },
     {
      "name": "dad & son video",
@@ -59,7 +59,7 @@
      "spend": 0.4,
      "leads": 0,
      "cpl": null,
-     "thumb": "https://scontent-iad3-2.xx.fbcdn.net/v/t15.5256-10/721950498_1397610135621905_1100767176793845875_n.jpg?_nc_cat=111&ccb=1-7&_nc_ohc=uYGnDHuiP5EQ7kNvwFp4rnU&_nc_oc=AdrwF0N96LxMHf8hhQ8ro-3zZlVZE0tKWitO7tG_-rgp3QFm5O5FswqhaR9cSLO5Q34&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=RukqIenzB-xE0C7UJZSLMw&_nc_tpa=Q5bMBQLfnphTyadKoUMqHLIawBMGjqvXjEdYO8P-eqs0Gf1SOgKbekuIlq9J4W5llFqDMkP_YXDTgSBAdw&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQRk5yNBd5tOglxPzzBb7HjKEh8MeT9pF3OKcNm9ikEBCQ&oe=6AEC4785"
+     "thumb": "https://scontent-ord5-1.xx.fbcdn.net/v/t15.5256-10/721950498_1397610135621905_1100767176793845875_n.jpg?_nc_cat=111&ccb=1-7&_nc_ohc=uYGnDHuiP5EQ7kNvwGQTxXl&_nc_oc=Adp7JogQBoyDrQNKcDqHnljX_tAJoxfrFWpilpyruaqnQlBFiUU62_gVhONhxgN0xcE&_nc_zt=23&_nc_ht=scontent-ord5-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=I36EochQjeRJ1QSPDn4G2A&_nc_tpa=Q5bMBQIhZs6EcdA5b5bFNYiAfnImBs1HTJY7n04SL1cSK6ou61ZztvD0ZlMUdy_quGXe-sXv6hoPsz7gjw&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQQC2t9yzjWb4jIB_NUbTk1mYcUrHZeH4syHHRy7wFDn6w&oe=6AEC4785"
     },
     {
      "name": "strawberry video",
@@ -67,15 +67,15 @@
      "spend": 0.05,
      "leads": 0,
      "cpl": null,
-     "thumb": "https://scontent-iad6-1.xx.fbcdn.net/v/t15.5256-10/723256765_1668676041009343_5992273100302434741_n.jpg?_nc_cat=109&ccb=1-7&_nc_ohc=IIuLcDGto1MQ7kNvwHiC4pu&_nc_oc=AdoquGibk9NWL1DwoUiYwlIyTKm1Xk8WwANBhPTvSniSZHxLIflET1rmyqpYWR0YcrI&_nc_zt=23&_nc_ht=scontent-iad6-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=RukqIenzB-xE0C7UJZSLMw&_nc_tpa=Q5bMBQL08jTRpaDCSDLmbvcx2Q78n7vvPQF46ZuaKwhh1q3FACa3xib4zizQTSkFD4fcP7bCazJYDfqiTw&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQSY5Yh44rVS3R9SqR6GJPjJWXBpLwMdVV1YSltkOUQamQ&oe=6AEC345B"
+     "thumb": "https://scontent-ord5-1.xx.fbcdn.net/v/t15.5256-10/723256765_1668676041009343_5992273100302434741_n.jpg?_nc_cat=109&ccb=1-7&_nc_ohc=IIuLcDGto1MQ7kNvwFCknC7&_nc_oc=AdrRS3fpVzq9brFjOOPL5eVAfUwWvuj1v8iCDGYATC5OAK63HbLAHgkEGgx_NHf-Vww&_nc_zt=23&_nc_ht=scontent-ord5-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=I36EochQjeRJ1QSPDn4G2A&_nc_tpa=Q5bMBQKKh1A6MA14YAwVoi7meluzra9fCygxE5jyNGkVc-TY7Kivg_vGmu2hJ6ugdWZCbRELlZ-AR0ExLQ&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQTlPagLgfbfXkvsLfWflLbg98ZD5iTRdmlQ4jhDmzAHxA&oe=6AEC6C9B"
     }
    ],
    "daily_budget": 10.0,
    "since": "2026-09-18",
    "days": 15,
-   "spend": 141.95,
-   "leads": 363,
-   "avg_spend_day": 9.46,
+   "spend": 142.42,
+   "leads": 364,
+   "avg_spend_day": 9.49,
    "cpl": 0.39
   },
   {
@@ -86,10 +86,10 @@
     {
      "name": "KZC-01",
      "on": true,
-     "spend": 87.91,
-     "leads": 206,
+     "spend": 88.42,
+     "leads": 208,
      "cpl": 0.43,
-     "thumb": "https://scontent-iad3-2.xx.fbcdn.net/v/t15.5256-10/823561990_1650609849982694_2357139794119368181_n.jpg?_nc_cat=105&ccb=1-7&_nc_ohc=QembxmmwFrEQ7kNvwHAdeN6&_nc_oc=AdqcvSSqJDDQzr4ib77oAd5IpdxrgAFWqX50bYNnabO3X1VnSKDojJPy8gFkbZPMaQw&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=RukqIenzB-xE0C7UJZSLMw&_nc_tpa=Q5bMBQK59WunM1Wy2nWiM_4Yt_CiKgNavpxZ-sYjY1QZe1VJy3Dv1EzV_G1Y0BXsb47YAaRv7HmQ9HKYSw&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQTskL7_UqCyYxBpHyIKPR8zXmwsenhHTNh84jWzecE59A&oe=6AEC4789"
+     "thumb": "https://scontent-ord5-2.xx.fbcdn.net/v/t15.5256-10/823561990_1650609849982694_2357139794119368181_n.jpg?_nc_cat=105&ccb=1-7&_nc_ohc=POHI7_u5_gkQ7kNvwGHGdBN&_nc_oc=Adrta_VyQal9m47r4l_7uN-_GthwBp6beYBj0MYyJztB3HBkmhjTyITIaa8dbStowuI&_nc_zt=23&_nc_ht=scontent-ord5-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=I36EochQjeRJ1QSPDn4G2A&_nc_tpa=Q5bMBQKHnT__KRUDOY1smIcuZRrjjlyElwSgtvfX808mrVc6nwGxfUZF3iaZo6xrnMhXLNniJbBSQ5wu-w&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQSASOlV8Q8ksAAS8pKQW93qqw8oRw-H97J9Qc8nqLGMvg&oe=6AEC4789"
     },
     {
      "name": "KZC-09",
@@ -97,15 +97,15 @@
      "spend": 0.92,
      "leads": 0,
      "cpl": null,
-     "thumb": "https://scontent-iad3-2.xx.fbcdn.net/v/t15.5256-10/870396559_1665550795005846_8128386418525752221_n.jpg?_nc_cat=111&ccb=1-7&_nc_ohc=Y8zxFki2JvIQ7kNvwEXKZ3j&_nc_oc=AdoqEK28GNchXFuWmuvyQA-bhsiLilfA766Omq69ZxhZwG5DLAR9We1dL_2aJRRSm8U&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=RukqIenzB-xE0C7UJZSLMw&_nc_tpa=Q5bMBQKaKiOfys6nQqmKd5z4e65GvZ6jcQrIBYMT2hLF72jzPfjaxT-NtvbcjDf5VGhwekRFm4FcwkHXsg&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQQpfIsj0rgw_t1u3cmYC68HkLWbXXVcBbyXyJLrPh4itQ&oe=6AEC3B68"
+     "thumb": "https://scontent-ord5-1.xx.fbcdn.net/v/t15.5256-10/870396559_1665550795005846_8128386418525752221_n.jpg?_nc_cat=111&ccb=1-7&_nc_ohc=Y8zxFki2JvIQ7kNvwEg6bAm&_nc_oc=Adp_ZTqiSFtVCIE-2LJa9F2uWZhJXJDHP2U4UGa5ITaKD2YofMvkZQ4KqjiRuyo591g&_nc_zt=23&_nc_ht=scontent-ord5-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=I36EochQjeRJ1QSPDn4G2A&_nc_tpa=Q5bMBQJQecHUKRVsV-lPZ4Mvr1rFjLZweF3r_McG9iAnri5l7FwPQrVaIjJV7LPQSDxLN32U8SgNiqN98A&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQQBECiSledDZIqHLzwp7Z2yY4KoS9uqmw9_k76ZOpAWMA&oe=6AEC73A8"
     }
    ],
    "daily_budget": 15.0,
    "since": "2026-10-27",
    "days": 6,
-   "spend": 88.83,
-   "leads": 206,
-   "avg_spend_day": 14.8,
+   "spend": 89.34,
+   "leads": 208,
+   "avg_spend_day": 14.89,
    "cpl": 0.43
   },
   {
@@ -116,19 +116,19 @@
     {
      "name": "KZC-09",
      "on": true,
-     "spend": 49.8,
+     "spend": 50.63,
      "leads": 57,
-     "cpl": 0.87,
-     "thumb": "https://scontent-iad3-2.xx.fbcdn.net/v/t15.5256-10/870396559_1665550795005846_8128386418525752221_n.jpg?_nc_cat=111&ccb=1-7&_nc_ohc=Y8zxFki2JvIQ7kNvwEXKZ3j&_nc_oc=AdoqEK28GNchXFuWmuvyQA-bhsiLilfA766Omq69ZxhZwG5DLAR9We1dL_2aJRRSm8U&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=RukqIenzB-xE0C7UJZSLMw&_nc_tpa=Q5bMBQLhoTNWzDds__9Doq7Ynlo3GKJzoFJea3rOc3fUAZFzfGw9r5WqXqFS_4igw3IqSveCuLmsk2o6jw&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQSk-Gw3pMEdvmKCqqbFBjqhlikSYiM40_GfFeZdM4FWsg&oe=6AEC3B68"
+     "cpl": 0.89,
+     "thumb": "https://scontent-ord5-1.xx.fbcdn.net/v/t15.5256-10/870396559_1665550795005846_8128386418525752221_n.jpg?_nc_cat=111&ccb=1-7&_nc_ohc=Y8zxFki2JvIQ7kNvwEg6bAm&_nc_oc=Adp_ZTqiSFtVCIE-2LJa9F2uWZhJXJDHP2U4UGa5ITaKD2YofMvkZQ4KqjiRuyo591g&_nc_zt=23&_nc_ht=scontent-ord5-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=I36EochQjeRJ1QSPDn4G2A&_nc_tpa=Q5bMBQLjMP1vQFzZHGHpFGgF0cuEwEqjOdpJvbRfeOfs8LcaFsmm_MhEKUUNAu53bpg0OYLrKQJ-aT9OBQ&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQRSp2WNulL-Mg2cZKoTuqrQwe2cgdZW-cefRcXe09OOGA&oe=6AEC73A8"
     }
    ],
    "daily_budget": 15.0,
    "since": "2026-10-27",
    "days": 6,
-   "spend": 49.8,
+   "spend": 50.63,
    "leads": 57,
-   "avg_spend_day": 8.3,
-   "cpl": 0.87
+   "avg_spend_day": 8.44,
+   "cpl": 0.89
   }
  ]
 }
