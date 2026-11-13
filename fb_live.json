@@ -1,5 +1,246 @@
 {
- "updated_at": "2026-11-13T16:13:56+00:00",
+ "updated_at": "2026-11-13T22:33:19+00:00",
  "period": "maximum",
- "adsets": []
+ "adsets": [
+  {
+   "id": "120257188978960602",
+   "adset": "KZ: қазақша (33+34)",
+   "campaign": "12 крео KZC-23–30 | 4x2 | 40$ | 11.11",
+   "ads": [
+    {
+     "name": "KAZ-ZRP-33",
+     "on": true,
+     "spend": 0.59,
+     "leads": 1,
+     "cpl": 0.59,
+     "thumb": "https://scontent-iad6-1.xx.fbcdn.net/v/t15.5256-10/897612187_1883196716369668_3131708413359251973_n.jpg?_nc_cat=111&_nc_map=urlgen_bucketless&ccb=1-7&_nc_ohc=LtsWbpP7StAQ7kNvwH5yL7p&_nc_oc=AdrcJaCC6SlT--M2x5eAUXwh5ZauTv-2EGPFEhutKod0X2YNYz4N_uZLkHNpoN6TKgE&_nc_zt=23&_nc_ht=scontent-iad6-1.xx&edm=ACTJxZ4EAAAA&_nc_gid=LqaOIS_k7LP1TH-5DFE55A&_nc_tpa=Q5bMBQLi1n7nMiJEajH6qPPpzygjjqS_0X0gFbMTMY5uT-3C_5BWwZpNXOw1zDeOFUMgeUNqK-HIoFbGPA&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=d2b52d&_nc_sid=58080a&oh=00_AQTsthAqiBLNZWmVjJBBc6ndJG2vtZogu0_i7l8ke6vp7A&oe=6AFD79CA"
+    },
+    {
+     "name": "KAZ-ZVON-34",
+     "on": true,
+     "spend": 24.43,
+     "leads": 60,
+     "cpl": 0.41,
+     "thumb": "https://scontent-iad6-1.xx.fbcdn.net/v/t15.5256-10/896850437_1451748436570843_4352150602491489128_n.jpg?_nc_cat=105&_nc_map=urlgen_bucketless&ccb=1-7&_nc_ohc=Hp2GPMQ2jYMQ7kNvwG-LJvi&_nc_oc=AdqBlr2pV3PnTfRZnUWopRSRyrRP3pYwOyDG41QCCPMcDvYkWDRDkExvabjaZriQoSE&_nc_zt=23&_nc_ht=scontent-iad6-1.xx&edm=ACTJxZ4EAAAA&_nc_gid=LqaOIS_k7LP1TH-5DFE55A&_nc_tpa=Q5bMBQJawts61bynESWlkwGug-D-6ehkRtVLSXx7WIK9lwhwsBhJfDMQL6DHB1zA7XtDw4N1U9yBCiY38w&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=d2b52d&_nc_sid=58080a&oh=00_AQTDzZZ9BwIAYkGZw7CJFcAzt3IKFKAy6ZvYH0TIJ0gjiQ&oe=6AFD77E1"
+    }
+   ],
+   "daily_budget": 10.0,
+   "since": "2026-11-11",
+   "days": 4,
+   "spend": 25.02,
+   "leads": 61,
+   "avg_spend_day": 6.25,
+   "cpl": 0.41
+  },
+  {
+   "id": "120257188072050602",
+   "adset": "Закон (23+24)",
+   "campaign": "12 крео KZC-23–30 | 4x2 | 40$ | 11.11",
+   "ads": [
+    {
+     "name": "KZC-23",
+     "on": true,
+     "spend": 0.72,
+     "leads": 0,
+     "cpl": null,
+     "thumb": "https://scontent-iad6-1.xx.fbcdn.net/v/t15.5256-10/899491692_2026694894668593_3645538521765181230_n.jpg?_nc_cat=101&_nc_map=urlgen_bucketless&ccb=1-7&_nc_ohc=OH5gnS2PlWkQ7kNvwHXoOFv&_nc_oc=AdpTRtamwGSlrdQBi9BD_NGW2vsQxcw1locdwHYlb_0cEZGYa45TbJN4YSvCW959obg&_nc_zt=23&_nc_ht=scontent-iad6-1.xx&edm=ACTJxZ4EAAAA&_nc_gid=LqaOIS_k7LP1TH-5DFE55A&_nc_tpa=Q5bMBQJnf5i-P5Ky25mDrVMMYtTmvOOHvnPU-S5_ZkXUpFlx_kyl1OftMNmMXU0OUrehZ_4FkTkrGn4kqw&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=d2b52d&_nc_sid=58080a&oh=00_AQRQ_p1BOMFzkWMbolZ0PiN4Eu5NSelc-nvDilsQnOMY2g&oe=6AFD7E0A"
+    },
+    {
+     "name": "KZC-24",
+     "on": true,
+     "spend": 21.16,
+     "leads": 31,
+     "cpl": 0.68,
+     "thumb": "https://scontent-iad3-1.xx.fbcdn.net/v/t15.5256-10/899451112_1165614129149333_7502629880395589467_n.jpg?_nc_cat=106&_nc_map=urlgen_bucketless&ccb=1-7&_nc_ohc=bbCYCg9u-5wQ7kNvwFoz35g&_nc_oc=AdoSid0fT5Qb1Y2KwppXdKN8Xqyqrsq1H6_Bbwqwvxt0BY6-sS3mDMuS6DBVg1rUGiU&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&edm=ACTJxZ4EAAAA&_nc_gid=LqaOIS_k7LP1TH-5DFE55A&_nc_tpa=Q5bMBQI9F2gIBhCQLeGg3eskojpzudg5c9J9jjEyXArh7MXoVHnpE7_-Nz5EaizYQBWgxF7wZRA6yDytNQ&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=d2b52d&_nc_sid=58080a&oh=00_AQToouB53yaoAbnikGxCnVfneCGUVSa9aCoQxTb9_k788A&oe=6AFD7D5C"
+    }
+   ],
+   "daily_budget": 10.0,
+   "since": "2026-11-11",
+   "days": 4,
+   "spend": 21.88,
+   "leads": 31,
+   "avg_spend_day": 5.47,
+   "cpl": 0.71
+  },
+  {
+   "id": "120257188075630602",
+   "adset": "Платежи (27+28)",
+   "campaign": "12 крео KZC-23–30 | 4x2 | 40$ | 11.11",
+   "ads": [
+    {
+     "name": "KZC-27",
+     "on": true,
+     "spend": 8.94,
+     "leads": 12,
+     "cpl": 0.74,
+     "thumb": "https://scontent-iad6-1.xx.fbcdn.net/v/t15.5256-10/897612208_970159979092017_2242578301645431284_n.jpg?_nc_cat=101&_nc_map=urlgen_bucketless&ccb=1-7&_nc_ohc=l0WRMNkSQzAQ7kNvwFq0xTp&_nc_oc=AdrA1Tj9Z7C1ERQNRwsmS3wdu0sgaUV9xt4agUqL_UT2xJ6Yt8yhAlHfMe2dZfv3-_A&_nc_zt=23&_nc_ht=scontent-iad6-1.xx&edm=ACTJxZ4EAAAA&_nc_gid=LqaOIS_k7LP1TH-5DFE55A&_nc_tpa=Q5bMBQJjq02q6wIwj9AlE09c_BQM_EobCBOg0dbgXJdS6QTN8ao_RllVfp5B1sM0gvnlMo-tUhWX3E0kuA&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=d2b52d&_nc_sid=58080a&oh=00_AQTInTqqh4d1CJLJSroXYYc_aecDUmYdln6QyNuMpMMbgA&oe=6AFD552B"
+    },
+    {
+     "name": "KZC-28",
+     "on": true,
+     "spend": 10.89,
+     "leads": 13,
+     "cpl": 0.84,
+     "thumb": "https://scontent-iad3-1.xx.fbcdn.net/v/t15.5256-10/899589350_2417586822381976_3237889583003177887_n.jpg?_nc_cat=100&_nc_map=urlgen_bucketless&ccb=1-7&_nc_ohc=eE6HbDEAFngQ7kNvwEqbwVH&_nc_oc=AdpNC1yWFeCSYMhY0X8sF_j2CegppK6vId1TijDUZCWFKXy7bIeJrUDukj7GMXUbpBA&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&edm=ACTJxZ4EAAAA&_nc_gid=LqaOIS_k7LP1TH-5DFE55A&_nc_tpa=Q5bMBQINW7EacWCj_7KpanKSY_mj-IAKVjymQjMVKv8Ik8kp7ms2Myz27KFqoqgdvJK3sdG_YRsDvrxGHw&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=d2b52d&_nc_sid=58080a&oh=00_AQRvhJbNmVe07_UTm2uS3zDWKeQ162DRSA1kWyHuxr8hzQ&oe=6AFD71B0"
+    }
+   ],
+   "daily_budget": 10.0,
+   "since": "2026-11-11",
+   "days": 4,
+   "spend": 19.83,
+   "leads": 25,
+   "avg_spend_day": 4.96,
+   "cpl": 0.79
+  },
+  {
+   "id": "120257188079510602",
+   "adset": "Суд (29+30)",
+   "campaign": "12 крео KZC-23–30 | 4x2 | 40$ | 11.11",
+   "ads": [
+    {
+     "name": "KZC-29",
+     "on": true,
+     "spend": 0.84,
+     "leads": 2,
+     "cpl": 0.42,
+     "thumb": "https://scontent-iad3-2.xx.fbcdn.net/v/t15.5256-10/897959842_1455803365883786_1513151996093570874_n.jpg?_nc_cat=100&_nc_map=urlgen_bucketless&ccb=1-7&_nc_ohc=DID_71MDSikQ7kNvwH-4y_z&_nc_oc=AdrMVe6lLdWOdbcA3maQpI-DMh22uzbnI618Odr-ks4XhbWbgJXOARGMGOTMjO5mKnw&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&edm=ACTJxZ4EAAAA&_nc_gid=LqaOIS_k7LP1TH-5DFE55A&_nc_tpa=Q5bMBQKACSVQUARCSnjYnE5qai7GtaujQLeIAppyWkOa9lNFYAZQwcrJXMNmHfLf0SKAujpaHEg4yRm4Fw&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=d2b52d&_nc_sid=58080a&oh=00_AQR7Dd3IUV50NIo0_2Kvc6FIQdMZRQGKaDzZAGSyvbrS9A&oe=6AFD7E4F"
+    },
+    {
+     "name": "KZC-30",
+     "on": true,
+     "spend": 18.92,
+     "leads": 24,
+     "cpl": 0.79,
+     "thumb": "https://scontent-iad3-2.xx.fbcdn.net/v/t15.5256-10/899579946_1815597746383948_3367072266697041232_n.jpg?_nc_cat=108&_nc_map=urlgen_bucketless&ccb=1-7&_nc_ohc=coN0h9CMiNEQ7kNvwFXr4nE&_nc_oc=Adpaxt67NsPay2zMC36K62N6jOvdMh6jxu-gMTVBGQaoh_nUp4NM6n_eM7_IwfjTOzM&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&edm=ACTJxZ4EAAAA&_nc_gid=LqaOIS_k7LP1TH-5DFE55A&_nc_tpa=Q5bMBQLPk7WiHxU8-S9uXivMVVI386wumqlL8tCAxccjM-a6P0hbV0TTjtpoib2alhB1hmK4f26nH3sZ5g&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=d2b52d&_nc_sid=58080a&oh=00_AQS4A2_ICwPTz_pzWtvyI4aJkGqLMt8sgiL8KoSvbDcDeQ&oe=6AFD67E7"
+    }
+   ],
+   "daily_budget": 10.0,
+   "since": "2026-11-11",
+   "days": 4,
+   "spend": 19.76,
+   "leads": 26,
+   "avg_spend_day": 4.94,
+   "cpl": 0.76
+  },
+  {
+   "id": "120257188978550602",
+   "adset": "RU: зарплата + звонки (31+32)",
+   "campaign": "12 крео KZC-23–30 | 4x2 | 40$ | 11.11",
+   "ads": [
+    {
+     "name": "ZRP-31",
+     "on": true,
+     "spend": 5.0,
+     "leads": 4,
+     "cpl": 1.25,
+     "thumb": "https://scontent-iad3-1.xx.fbcdn.net/v/t15.5256-10/901242654_4117270851903516_908909000512436249_n.jpg?_nc_cat=105&_nc_map=urlgen_bucketless&ccb=1-7&_nc_ohc=5rIhx86Xc5AQ7kNvwHvWjpO&_nc_oc=AdpwuNpR2oUY3cW22GifhIxUOHoHMYO5OMdhDjKwxmvOPxeWtsA1bCpdC6e4dB8fh0Y&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&edm=ACTJxZ4EAAAA&_nc_gid=LqaOIS_k7LP1TH-5DFE55A&_nc_tpa=Q5bMBQJDUf8E6Goh-E_Sr9rfiSra7cmIa3iPw7D6I3jiaKei6UoI-j4-cSBLJ2t_DmjlLFKaW9gZSBslag&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=d2b52d&_nc_sid=58080a&oh=00_AQSICV2SscT1ZTvouxlsQUMDzx1bm7BppCb9tQc0CknyUw&oe=6AFD4DCB"
+    },
+    {
+     "name": "ZVON-32",
+     "on": true,
+     "spend": 13.93,
+     "leads": 14,
+     "cpl": 0.99,
+     "thumb": "https://scontent-iad3-2.xx.fbcdn.net/v/t15.5256-10/899885892_1643717651148248_9162019999728987416_n.jpg?_nc_cat=107&_nc_map=urlgen_bucketless&ccb=1-7&_nc_ohc=ZoVndZnXdP4Q7kNvwE0lP24&_nc_oc=AdpSObu3PLFPw-1GQ2NcJPtgWLyq24DjGFF7v-uh6CxwjSgkPWClJdpeOJxApDQy1BE&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&edm=ACTJxZ4EAAAA&_nc_gid=LqaOIS_k7LP1TH-5DFE55A&_nc_tpa=Q5bMBQL3e4PMYmsXnKYBKwznbfAPGfqVuXPdQxMWDuYqNNV-6hxQB-feUvx8Q5wyYzs6ONGutoGGNRuigQ&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=d2b52d&_nc_sid=58080a&oh=00_AQQBNi62-fzm6J88ba8m_gKcXCmVfR-EIOuASSlMsPIn7A&oe=6AFD5682"
+    }
+   ],
+   "daily_budget": 10.0,
+   "since": "2026-11-11",
+   "days": 4,
+   "spend": 18.93,
+   "leads": 18,
+   "avg_spend_day": 4.73,
+   "cpl": 1.05
+  },
+  {
+   "id": "120257188073930602",
+   "adset": "Зарплата (25+26)",
+   "campaign": "12 крео KZC-23–30 | 4x2 | 40$ | 11.11",
+   "ads": [
+    {
+     "name": "KZC-25",
+     "on": false,
+     "spend": 2.42,
+     "leads": 1,
+     "cpl": 2.42,
+     "thumb": "https://scontent-iad3-1.xx.fbcdn.net/v/t15.5256-10/899632576_1847764506268745_5306765110113034183_n.jpg?_nc_cat=104&_nc_map=urlgen_bucketless&ccb=1-7&_nc_ohc=atbVF2i9D7cQ7kNvwFU8Njr&_nc_oc=AdqgwaEsbltTp1RC3GkkBn6RQ3aGAaF8sJIdN38W3PbtTxotCUVYUxzgZyo12qsgU0Y&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&edm=ACTJxZ4EAAAA&_nc_gid=LqaOIS_k7LP1TH-5DFE55A&_nc_tpa=Q5bMBQJhbVzGGIRs4FJlxTg_ccBhxygMQn0JS8m8mPBMJ6x7yfG9yEDHIVdF26Xrq8A_vqHdA1yNV_8pyQ&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=d2b52d&_nc_sid=58080a&oh=00_AQRh8g7ye0MBLxfi_I9aXMZRaqosDbglsWypmooqSbwF1A&oe=6AFD60CB"
+    },
+    {
+     "name": "KZC-26",
+     "on": false,
+     "spend": 8.26,
+     "leads": 6,
+     "cpl": 1.38,
+     "thumb": "https://scontent-iad6-1.xx.fbcdn.net/v/t15.5256-10/896990937_2199899590878017_516102084083872044_n.jpg?_nc_cat=101&_nc_map=urlgen_bucketless&ccb=1-7&_nc_ohc=tOOo-Xqh4dgQ7kNvwEPwEKg&_nc_oc=AdplVe-xeJi6iMTxCID756I45fyGTS-GsPEIQtwOJOLe0p9Z0bHiwvrBh85LnCzFGPU&_nc_zt=23&_nc_ht=scontent-iad6-1.xx&edm=ACTJxZ4EAAAA&_nc_gid=LqaOIS_k7LP1TH-5DFE55A&_nc_tpa=Q5bMBQLvt6uU5bkeJoric6pOtqdJDaJeAkYU6JU0n5-cYvGUfjB-pnSogVtjLyXyQvZpMV_4FMPVJjHdkA&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=d2b52d&_nc_sid=58080a&oh=00_AQQG4olVWe1V6HWDUYofww6Ayi-pBeWDvW954R4GVBT5xw&oe=6AFD5F93"
+    }
+   ],
+   "daily_budget": 10.0,
+   "since": "2026-11-11",
+   "days": 2,
+   "spend": 10.68,
+   "leads": 7,
+   "avg_spend_day": 5.34,
+   "cpl": 1.53
+  },
+  {
+   "id": "120257237118350602",
+   "adset": "Мужчины в долгах (37+38)",
+   "campaign": "4 крео KRED-35 MAN-36 ZAKR-37 P70-38 | 2x2 | 20$ | 14.11",
+   "ads": [
+    {
+     "name": "P70-38",
+     "on": true,
+     "spend": 0.0,
+     "leads": 0,
+     "cpl": null,
+     "thumb": "https://scontent-iad6-1.xx.fbcdn.net/v/t15.5256-10/904542733_1113373074837343_3605672167444532882_n.jpg?_nc_cat=105&_nc_map=urlgen_bucketless&ccb=1-7&_nc_ohc=kggSmphrK3IQ7kNvwGaATb2&_nc_oc=Ado95Dqdy6GoPBU9L72z1xRdWuD97oTfKcUvOnJ7seKbwpwD2WclduT6pcsMgj7THyI&_nc_zt=23&_nc_ht=scontent-iad6-1.xx&edm=ACTJxZ4EAAAA&_nc_gid=LqaOIS_k7LP1TH-5DFE55A&_nc_tpa=Q5bMBQLzgRsAa30tPQPjwmKAPgnhqXaPk8EQoETkVYDcVKgR7f2Bftm0Kmgz4yVK2SHF9qFWiUDUVaTpQA&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=d2b52d&_nc_sid=58080a&oh=00_AQRbLW1loiKHoyCDfxmyToRCrxEBk8eiNprwo-HiBxHoOA&oe=6AFD5044"
+    },
+    {
+     "name": "ZAKR-37",
+     "on": true,
+     "spend": 0.0,
+     "leads": 0,
+     "cpl": null,
+     "thumb": "https://scontent-iad3-1.xx.fbcdn.net/v/t15.5256-10/901118615_1865770821091201_8703283539441332822_n.jpg?_nc_cat=109&_nc_map=urlgen_bucketless&ccb=1-7&_nc_ohc=eWSozaLzzpYQ7kNvwHl-3yI&_nc_oc=AdoYHjFpnR8nIBAxBEC2505YG8OidIqq4UvJLitkT5uO7hLiaHz8RSL1KfiQJ-GSvUM&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&edm=ACTJxZ4EAAAA&_nc_gid=LqaOIS_k7LP1TH-5DFE55A&_nc_tpa=Q5bMBQIg_UEXRP4gJtPZ4CgYk06Y96PbHq-mmZsEEabuJXUciTpBGlq-hU4DA9Q6smLAPL0LOa4dqkOy1w&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=d2b52d&_nc_sid=58080a&oh=00_AQTa6iLvIaoezT7oYaXRw9Js93NUUu05VJ0YpcX-84US5A&oe=6AFD5E1C"
+    }
+   ],
+   "daily_budget": 15.0,
+   "since": null,
+   "days": 0,
+   "spend": 0,
+   "leads": 0,
+   "avg_spend_day": null,
+   "cpl": null
+  },
+  {
+   "id": "120257237117840602",
+   "adset": "Кредиты + мужчина видео (35+36)",
+   "campaign": "4 крео KRED-35 MAN-36 ZAKR-37 P70-38 | 2x2 | 20$ | 14.11",
+   "ads": [
+    {
+     "name": "KRED-35",
+     "on": true,
+     "spend": 0.0,
+     "leads": 0,
+     "cpl": null,
+     "thumb": "https://scontent-iad6-1.xx.fbcdn.net/v/t15.5256-10/894516511_1148596577589691_4901932641214494149_n.jpg?_nc_cat=105&_nc_map=urlgen_bucketless&ccb=1-7&_nc_ohc=FT9hvbpfvrUQ7kNvwGPxLUD&_nc_oc=Ado-wHlzXBWcFaj9h0oAEpkapSlYkHrz646J_piFbgPRkk733vKyzXS-gWZSpOWQ3wc&_nc_zt=23&_nc_ht=scontent-iad6-1.xx&edm=ACTJxZ4EAAAA&_nc_gid=LqaOIS_k7LP1TH-5DFE55A&_nc_tpa=Q5bMBQJZkC_04cWAZ4mpYPvdqNq12nPkCcpmqP_72Vaagdu_JBEwcqZy8--UQw_088QnqRkTawd57YjW8A&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=d2b52d&_nc_sid=58080a&oh=00_AQRfUMV9yzW6iviUJNsyFZVtHBkuSCZZMdA5veRUbFHD8A&oe=6AFD5AC4"
+    },
+    {
+     "name": "MAN-36",
+     "on": true,
+     "spend": 0.0,
+     "leads": 0,
+     "cpl": null,
+     "thumb": "https://scontent-iad3-1.xx.fbcdn.net/v/t15.5256-10/900107250_1882218592779622_1577746309028634413_n.jpg?_nc_cat=107&_nc_map=urlgen_bucketless&ccb=1-7&_nc_ohc=YbDBleACbisQ7kNvwEYogsI&_nc_oc=AdrOfmcmsycTJYpXX8iN4WH3JaAMCGqRGc9rxTlvv9pqA8XXgL5ozdW24usjB3-fGGY&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&edm=ACTJxZ4EAAAA&_nc_gid=LqaOIS_k7LP1TH-5DFE55A&_nc_tpa=Q5bMBQKoGNHvcolRHF5mzN3KnRW8ZRv5_bDLgPLtSROnkYk4yMvpXb12hamuuturfGLIC8BQovrB53bO5g&stp=c0.5000x0.5000f_dst-emg0_p240x240_q75_tt6&ur=d2b52d&_nc_sid=58080a&oh=00_AQQl7kDSRat2Hxspqb54lGyzXoDvWKyUGxzCRKMw5rRQUQ&oe=6AFD6A44"
+    }
+   ],
+   "daily_budget": 15.0,
+   "since": null,
+   "days": 0,
+   "spend": 0,
+   "leads": 0,
+   "avg_spend_day": null,
+   "cpl": null
+  }
+ ]
 }
